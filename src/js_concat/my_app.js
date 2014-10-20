@@ -197,7 +197,8 @@ function( muMenus, $scope, $interval ){
 			sizeOpen: 260,
 			sizeClosed: 50
 		})
-		.link( 'left right', 'one open' );
+		.link( 'left right', 'one open' )
+		.addQuery( 'w', '100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700' );
 
 
 
@@ -212,18 +213,18 @@ function( muMenus, $scope, $interval ){
 
 	this.selectLeft = function ( $index ) {
 		if (self.leftOpen !== $index) {
-			self.leftOpen = $index
+			self.leftOpen = $index;
 		} else {
-			self.leftOpen = -1
+			self.leftOpen = -1;
 		}
-	}
+	};
 	this.selectRight = function ( $index ) {
 		if (self.rightOpen !== $index) {
-			self.rightOpen = $index
+			self.rightOpen = $index;
 		} else {
-			self.rightOpen = -1
+			self.rightOpen = -1;
 		}
-	}
+	};
 
 
 

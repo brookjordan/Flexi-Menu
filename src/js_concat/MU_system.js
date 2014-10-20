@@ -380,21 +380,37 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 				containerWidth -
 				getSize( 'left' ) -
 				getSize( 'right' ),
-			greaterThan = '',
-			i = 100;
+			contentHeight =
+				containerHeight -
+				getSize( 'top' ) -
+				getSize( 'bottom' );
 
-		while ( i < contentWidth  ) {
-			greaterThan += ' media__min-width__' + i;
-			i += 100;
-		}
-
-		muSystem.mediaClass = greaterThan;
 		muSystem.containerWidth = containerWidth;
 		muSystem.contentWidth = contentWidth;
 
 		muSystem.containerHeight = containerHeight;
+		muSystem.contentHeight = contentHeight;
+
+		setContextQueryString();
 
 		return contentWidth;
+	}
+
+	function setContextQueryString () {
+		var greaterThan = '',
+			i = 0, query;
+
+		for (; i < contextQueries.w.length; i+=1 ) {
+			query = contextQueries.w[i];
+
+			if ( query <= muSystem.contentWidth ) {
+				greaterThan += ' media__min-width__' + query;
+			} else {
+				break;
+			}
+		}
+
+		muSystem.mediaClass = greaterThan;
 	}
 
 	function resizeHandler () {
@@ -421,6 +437,42 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 		return systemMetrics;
 	}
 
+	function addQuery ( type ) {
+		var i = 1, j,
+			args = arguments, arg,
+			queries, query;
+
+		for (; i<args.length; i+=1 ) {
+			arg = args[i];
+
+			switch ( typeof arg ) {
+				case 'string':
+				case 'number':
+					queries = ( '' + arg ).split( ' ' );
+					break;
+
+				default:
+					queries = arg;
+					break;
+			}
+
+			for ( j=0; j<queries.length; j+=1 ) {
+				contextQueries[ type ].push( +queries[j] );
+			}
+		}
+
+		contextQueries[ type ].sort(sortNumber);
+		setContextQueryString();
+
+		$rootScope.$broadcast( 'MU_windowResized' );
+
+		return muSystem;
+	}
+
+	function sortNumber ( a, b ) {
+		return a - b;
+	}
+
 	function muSystem () {}
 
 
@@ -432,7 +484,11 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 		links = [],
 		menuOrder = [],
 		broadcastResize = false,
-		lastResize = +new Date();
+		lastResize = +new Date(),
+		contextQueries = {
+			w: [],
+			h: []
+		};
 
 
 
@@ -449,6 +505,7 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 	muSystem.unlink = unlinkMenus;
 	muSystem.reorder = reorderMenu;
 	muSystem.mediaClass = '';
+	muSystem.addQuery = addQuery;
 
 	findContentSize();
 
@@ -463,8 +520,6 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 	muSystem.menus = menus;
 	muSystem.metrics = getSystemMetrics;
 	muSystem.sizeOf = getSize;
-
-	muSystem.number = 100;
 
 	return muSystem;
 }]);

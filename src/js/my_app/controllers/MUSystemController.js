@@ -3,61 +3,38 @@ function( muMenus, $scope, $interval ){
 
 	var self = this;
 
-	//	Creating styles
-	this.leftStyle = function () {
-		var metrics = muMenus.menus.left.metrics;
+	function capitalise ( string ) {
+		return string.substr(0,1).toUpperCase() + string.substr(1);
+	}
 
-		return {
-			'width':          metrics.size + 'px',
-			'left':           metrics.left + 'px',
-			'padding-top':    metrics.top + 'px',
-			'padding-bottom': metrics.bottom + 'px',
-			'z-index':        metrics.order
-		};
-	};
-	this.rightStyle = function () {
-		var metrics = muMenus.menus.right.metrics;
+	this.getClassName = function () {
+		var className = "",
+			i, j, menu, menu2;
 
-		return {
-			'width':          metrics.size + 'px',
-			'right':          metrics.right + 'px',
-			'padding-top':    metrics.top + 'px',
-			'padding-bottom': metrics.bottom + 'px',
-			'z-index':        metrics.order
-		};
-	};
-	this.topStyle = function () {
-		var metrics = muMenus.menus.top.metrics;
+		for ( i in muMenus.menus ) {
+			menu = muMenus.menus[i];
 
-		return {
-			'height':        metrics.size + 'px',
-			'top':           metrics.top + 'px',
-			'padding-left':  metrics.left + 'px',
-			'padding-right': metrics.right + 'px',
-			'z-index':       metrics.order
-		};
-	};
-	this.bottomStyle = function () {
-		var metrics = muMenus.menus.bottom.metrics;
+			className += ' MU-' + i + '--' +
+				(menu.visible ?
+					menu.state :
+					'hidden');
 
-		return {
-			'height':        metrics.size + 'px',
-			'bottom':        metrics.bottom + 'px',
-			'padding-left':  metrics.left + 'px',
-			'padding-right': metrics.right + 'px',
-			'z-index':       metrics.order
-		};
-	};
-	this.systemStyle = function () {
-		var metrics = muMenus.metrics();
+			className += ' MU-' + i + "Order" + menu.metrics.order;
 
-		return {
-			'padding-top':    metrics.top + 'px',
-			'padding-right':  metrics.right + 'px',
-			'padding-left':   metrics.left + 'px',
-			'padding-bottom': metrics.bottom + 'px',
-			'z-index':        metrics.order
-		};
+			for ( j in muMenus.menus ) {
+				if (j !== i) {
+					menu2 = muMenus.menus[j];
+
+					if ( menu.metrics.order > menu2.metrics.order ) {
+						className += ' MU-' + i + "Above" + capitalise( j );
+					} else {
+						className += ' MU-' + i + "Below" + capitalise( j );
+					}
+				}
+			}
+		}
+
+		return className;
 	};
 
 
@@ -75,28 +52,16 @@ function( muMenus, $scope, $interval ){
 
 	//	Adding menus
 	muMenus
-		.add('top', {
-			sizeOpen: 80,
-			sizeClosed: 50
-		})
+		.add('top')
 		.add('bottom', {
 			//visible: false,
 			state: 'open',
-
-			sizeOpen: 40,
-			sizeClosed: 40
 		})
 		.add('right', {
 			state: 'closed',
-
-			sizeOpen: 260,
-			sizeClosed: 50
 		})
 		.add('left', {
 			state: 'closed',
-
-			sizeOpen: 260,
-			sizeClosed: 50
 		})
 		.link( 'left right', 'one open' )
 		.addQuery( 'w', '100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700' );

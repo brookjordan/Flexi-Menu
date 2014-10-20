@@ -11,7 +11,7 @@
 	<div
 		ng-cloak
 		ng-controller="MUSystemController as MU"
-		class="MU {{ MU.menus.mediaClass }}"
+		class="MU {{ MU.menus.mediaClass }} {{ MU.getClassName() }}"
 		id="MU"
 		ng-style="MU.systemStyle()">
 
@@ -74,9 +74,7 @@
 
 	<script type="text/ng-template" id="menus/left.html">
 		<div ng-controller="MUMenuLeftController as ML">
-			<div
-				class="MU__navIcons MU__navIcons-left"
-				ng-style="{ top: MU.menus.menus.left.metrics.top + 'px', height: MU.menus.containerHeight - MU.menus.menus.left.metrics.top - MU.menus.menus.left.metrics.bottom + 'px' }">
+			<div class="MU__navIcons MU__navIcons-left">
 				<button
 					class="MU__navIcons__item"
 					ng-click="ML.toggle( $index )"
@@ -105,9 +103,7 @@
 
 	<script type="text/ng-template" id="menus/right.html">
 		<div ng-controller="MUMenuRightController as MR">
-			<div
-				class="MU__navIcons MU__navIcons-right"
-				ng-style="{ top: MU.menus.menus.right.metrics.top + 'px', height: MU.menus.containerHeight - MU.menus.menus.right.metrics.top - MU.menus.menus.right.metrics.bottom + 'px' }">
+			<div class="MU__navIcons MU__navIcons-right">
 				<button
 					class="MU__navIcons__item"
 					ng-click="MR.toggle( $index )"

@@ -9,13 +9,6 @@
 	transition: all .2s;
 
 	&__center {
-		position: relative;
-		height: 100%;
-
-		background-color: #000;
-		color: white;
-
-		transition: all .2s;
 
 		&__scroll {
 			overflow: auto;
@@ -50,10 +43,6 @@
 		&-bottom,
 		&-left,
 		&-right {
-			box-sizing: border-box;
-			position: absolute;
-
-			transition: all .2s;
 
 			&__inner {
 				position: relative;

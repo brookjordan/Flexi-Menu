@@ -6,8 +6,8 @@ html, body {
 }
 
 .MU__menu {
-	&-top,
-	&-bottom {
+	&-top__inner,
+	&-bottom__inner {
 		background-color: black;
 	}
 
@@ -16,78 +16,6 @@ html, body {
 	}
 	&-right {
 		background-color: #696969;
-	}
-}
-
-.MU__navIcons {
-	position: fixed;
-	box-sizing: border-box;
-	z-index: 6;
-	width: 50px;
-
-	transition: all .2s;
-
-	&-left,
-	&-right {
-		background: #333;
-		overflow: auto;
-	}
-
-	&-left {
-		left: 0;
-
-		.MU__menu-left--hidden & {
-			top: -50px;
-		}
-	}
-
-	&-right {
-		right: 0;
-		background: #333;
-
-		.MU__menu-right--hidden & {
-			right: -50px;
-		}
-	}
-
-	&__item {
-		width: 40px;
-		height: 40px;
-		line-height: 40px;
-		margin: 5px;
-
-		background: #999;
-		border-radius: 5px;
-
-		transition: all .2s;
-
-		&:hover {
-			background: white;
-		}
-	}
-
-	&-left__item--active,
-	&-left__item--active:hover {
-		padding-right: 5px;
-		margin-right: 0;
-
-		background: #636363;
-
-		width: 45px;
-		border-top-right-radius: 0;
-		border-bottom-right-radius: 0;
-	}
-
-	&-right__item--active,
-	&-right__item--active:hover {
-		padding-left: 5px;
-		margin-left: 0;
-
-		background: #696969;
-
-		width: 45px;
-		border-top-left-radius: 0;
-		border-bottom-left-radius: 0;
 	}
 }
 

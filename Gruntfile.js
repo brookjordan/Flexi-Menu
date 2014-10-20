@@ -1,5 +1,7 @@
 module.exports = function(grunt) {
 
+var debug_mode = false;
+
 // Project configuration.
 grunt.initConfig({
   pkg: grunt.file.readJSON('package.json'),
@@ -9,7 +11,9 @@ grunt.initConfig({
   sass: {
     dist: {
       options: {
-        style: 'compressed',
+        style: debug_mode ?
+          'expanded' :
+          'compressed',
         sourcemap: 'inline',
       },
       files: {
@@ -48,11 +52,6 @@ grunt.initConfig({
       separator: '\n;',
     },
 
-    angular: {
-      src: ['src/js/angular.js',],
-      dest: 'src/js_concat/angular.js',
-    },
-
     mu_system: {
       src: ['src/js/MU_system/app.js', 'src/js/MU_system/services/*.js', 'src/js/MU_system/directives/*.js', 'src/js/MU_system/controllers/*.js',],
       dest: 'src/js_concat/MU_system.js',
@@ -66,15 +65,28 @@ grunt.initConfig({
 
 
 
+  ngdocs: {
+    all: ['src/js/**/*.js']
+  },
+
+
+
   uglify: {
     my_target: {
       options: {
         sourceMap: true,
         sourceMapIncludeSources: true,
-        mangle: false,
+
+        mangle: debug_mode ?
+          false :
+          {
+            except: ['angular',],
+          },
+
+        beautify: debug_mode ? true : false,
       },
       files: {
-        'js/all.min.js': ['src/js_concat/angular.js', 'src/js_concat/MU_system.js', 'src/js_concat/my_app.js',],
+        'js/all.min.js': ['src/js_concat/MU_system.js', 'src/js_concat/my_app.js',],
       }
     }
   },
@@ -128,8 +140,10 @@ grunt.loadNpmTasks('grunt-autoprefixer');
 grunt.loadNpmTasks('grunt-contrib-watch');
 grunt.loadNpmTasks('grunt-contrib-concat');
 grunt.loadNpmTasks('grunt-contrib-uglify');
+grunt.loadNpmTasks('grunt-ngdocs');
 
 // Default tasks.
-grunt.registerTask('default', ['sass', 'autoprefixer', 'concat', 'uglify', 'watch']);
+grunt.registerTask('default', ['sass', 'autoprefixer', 'concat', 'uglify', 'watch', ]);
+grunt.registerTask('ngdocs', ['ngdocs', ]);
 
 };

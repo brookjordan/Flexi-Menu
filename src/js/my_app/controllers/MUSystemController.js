@@ -19,13 +19,13 @@ function( muMenus, $scope, $interval ){
 					menu.state :
 					'hidden');
 
-			className += ' MU-' + i + "Order" + menu.metrics.order;
+			className += ' MU-' + i + "Order" + menu.order;
 
 			for ( j in muMenus.menus ) {
 				if (j !== i) {
 					menu2 = muMenus.menus[j];
 
-					if ( menu.metrics.order > menu2.metrics.order ) {
+					if ( menu.order > menu2.order ) {
 						className += ' MU-' + i + "Above" + capitalise( j );
 					} else {
 						className += ' MU-' + i + "Below" + capitalise( j );
@@ -52,16 +52,26 @@ function( muMenus, $scope, $interval ){
 
 	//	Adding menus
 	muMenus
-		.add('top')
+		.add('top', {
+			sizeOpen: 80,
+			sizeClosed: 50
+		})
 		.add('bottom', {
 			//visible: false,
 			state: 'open',
+
+			sizeOpen: 100,
+			sizeClosed: 50
 		})
 		.add('right', {
 			state: 'closed',
+			sizeOpen: 260,
+			sizeClosed: 50
 		})
 		.add('left', {
 			state: 'closed',
+			sizeOpen: 260,
+			sizeClosed: 50
 		})
 		.link( 'left right', 'one open' )
 		.addQuery( 'w', '100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700' );

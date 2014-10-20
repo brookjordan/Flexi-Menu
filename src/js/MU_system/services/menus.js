@@ -4,95 +4,159 @@
 MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 	function( $window, $rootScope, $timeout ) {
 
-	function setMetrics ( menuSide ) {
-		var thisMenu     = menus[ menuSide ],
-			size         = getSize( menuSide ),
-			openSize     = getOpenSize( menuSide ),
-			order        = orderOf( menuSide ),
-			offset = {};
+
+	/*
+	 *	Add a new menu
+	 */
+	function addMenu ( menuSide, options ) {
+		var o = options || {},
+
+			visible = typeof o.visible === 'boolean' ?
+				o.visible :
+				true,
+			state = o.state || 'open',
+			sizeOpen = o.sizeOpen || 50,
+			sizeClosed = o.sizeClosed || 10;
 
 
-		offset[ menuSide ] = size - openSize;
+		menus.items[ menuSide ] = {
+			visible: visible,
+			state: state,
 
-		switch ( menuSide ) {
-			case 'bottom':
-			case 'top':
-				offset.left   = 0;
-				offset.right  = 0;
+			styles: {
+				open: sizeOpen,
+				closed: sizeClosed
+			}
+		};
+		menus.order.push( menuSide );
 
-				if ( order <= orderOf('left') ) {
-					offset.left = getSize('left');
-				}
 
-				if ( order <= orderOf('right') ) {
-					offset.right = getSize('right');
-				}
-				break;
+		setAllOrders();
+		findContentSize();
 
-			case 'left':
-			case 'right':
-				offset.top     = 0;
-				offset.bottom  = 0;
+		$rootScope.$broadcast( 'MU_menuAdded', { menuSide: menuSide } );
 
-				if ( order <= orderOf('top') ) {
-					offset.top = getSize('top');
-				}
 
-				if ( order <= orderOf('bottom') ) {
-					offset.bottom = getSize('bottom');
-				}
-				break;
+		return muSystem;
+	}
+
+
+
+
+
+	/*
+	 *	Menu ordering
+	 */
+	function setOrder ( menuSide ) {
+		var oldOrder	= angular.copy( menus.order ),
+			thisMenu    = menus.items[ menuSide ],
+			order       = orderOf( menuSide );
+
+		thisMenu.order = order;
+
+		$rootScope.$broadcast( 'MU_menusReordered', { oldOrder: oldOrder, newOrder: menus.order } );
+
+		return muSystem;
+	}
+
+	function setAllOrders () {
+		var i;
+
+		for ( i in menus.items ) {
+			setOrder( i );
 		}
 
-		thisMenu.metrics = {
-			size:    openSize,
-			top:     offset.top,
-			bottom:  offset.bottom,
-			left:    offset.left,
-			right:   offset.right,
-			order:   order
-		};
+		return muSystem;
 	}
-	function setSystemMetrics () {
-		var paddingLeft    = getSize('left'),
-			paddingRight   = getSize('right'),
-			paddingTop     = getSize('top'),
-			paddingBottom  = getSize('bottom');
 
-		if ( paddingLeft + paddingRight > muSystem.containerWidth ) {
-			if ( paddingLeft > muSystem.containerWidth ) {
-				paddingRight = 0;
-				paddingLeft = muSystem.containerWidth;
+	function orderOf ( menuSide ) {
+		var order = 4 - menus.order.indexOf( menuSide );
+
+		return order;
+	}
+
+	function reorderMenus ( requestedOrder ) {
+		var ro,
+			newOrder = [],
+
+			item,
+			i = 0;
+
+		if ( typeof requestedOrder === 'undefined' ) {
+			ro = [];
+		} else if ( typeof requestedOrder === 'string' ) {
+			ro = requestedOrder.split(' ');
+		} else {
+			ro = requestedOrder;
+		}
+
+		for (; i < ro.length; i+=1 ) {
+			item = ro[i];
+
+			if ( menus.order.indexOf( item ) > -1 ) {
+				newOrder.push( item );
+			}
+		}
+
+		for ( i=0; i<menus.order.length; i+=1 ) {
+			item = menus.order[i];
+
+			if ( newOrder.indexOf( item ) === -1 ) {
+				newOrder.push( item );
+			}
+		}
+
+		menus.order = newOrder;
+
+		setAllOrders();
+
+		return muSystem;
+	}
+
+	function menuIndex ( reference ) {
+		if ( typeof reference === 'number' ) {
+			return reference;
+		} else {
+			return menus.order.indexof( reference );
+		}
+	}
+
+
+
+
+
+	/*
+	 *	Box Sizes
+	 */
+	function setSystemMetrics () {
+		var offsetLeft    = getSize('left'),
+			offsetRight   = getSize('right'),
+			offsetTop     = getSize('top'),
+			offsetBottom  = getSize('bottom');
+
+		if ( offsetLeft + offsetRight > muSystem.containerWidth ) {
+			if ( offsetLeft > muSystem.containerWidth ) {
+				offsetRight = 0;
+				offsetLeft = muSystem.containerWidth;
 			} else {
-				paddingRight = muSystem.containerWidth - paddingLeft;
+				offsetRight = muSystem.containerWidth - offsetLeft;
 			}
 		}
 
 		systemMetrics = {
-			top:     paddingTop,
-			right:   paddingRight,
-			bottom:  paddingBottom,
-			left:    paddingLeft,
+			top:     offsetTop,
+			right:   offsetRight,
+			bottom:  offsetBottom,
+			left:    offsetLeft,
 			order:   0
 		};
 	}
-	function setAllMetrics () {
-		var i;
-
-		for ( i in menus ) {
-
-			setMetrics( i );
-		}
-		setSystemMetrics();
-	}
-
-
 
 	function getSize ( menuSide ) {
 		var size;
 
-		if ( menus[ menuSide ] && menus[ menuSide ].visible ) {
-			size = menus[ menuSide ].styles[ menus[ menuSide ].state ];
+		if ( menus.items[ menuSide ] && menus.items[ menuSide ].visible ) {
+			size = menus.items[ menuSide ].styles[ menus.items[ menuSide ].state ];
 		} else {
 			size = 0;
 		}
@@ -103,19 +167,46 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 	function getOpenSize ( menuSide ) {
 		var size;
 
-		size = menus[ menuSide ].styles.open;
+		size = menus.items[ menuSide ].styles.open;
 
 		return size;
 	}
 
-	function orderOf ( menuSide ) {
-		var order = 4 - menuOrder.indexOf( menuSide );
 
-		return order;
+
+
+
+	/*
+	 *	Visibility
+	 */
+	function toggleVisibility ( menuSide, to ) {
+		if ( typeof to === 'boolean' ) {
+			menus.items[ menuSide ].visible = to;
+		} else {
+			menus.items[ menuSide ].visible = !menus.items[ menuSide ].visible;
+		}
+
+		handleLinks( menuSide );
+		setAllOrders();
+		setSystemMetrics();
+		findContentSize();
+
+		return muSystem;
 	}
 
+	function isVisible ( menuSide ) {
+		return menus.items[ menuSide ].visible;
+	}
+
+
+
+
+
+	/*
+	 *	State manipulation
+	 */
 	function toggleState ( menuSide, to ) {
-		var thisMenu = menus[ menuSide ];
+		var thisMenu = menus.items[ menuSide ];
 
 		if ( typeof to === 'string' ) {
 			thisMenu.state = to;
@@ -126,118 +217,30 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 		}
 
 		handleLinks( menuSide );
-		setAllMetrics();
+		setAllOrders();
+		setSystemMetrics();
 		findContentSize();
 
 		$rootScope.$broadcast( 'MU_stateToggled_' + menuSide, thisMenu.state );
 
 		return muSystem;
 	}
-	function handleLinks ( menuSide ) {
-		var i = 0,
-			thisLink,
-			thisMenuLinkIndex,
-			otherMenuLinkIndex,
-			otherMenuSide,
-
-			thisMenu = menus[menuSide],
-			otherMenu;
-
-		for (; i<links.length; i+=1) {
-			thisLink           = links[i];
-			thisMenuLinkIndex  = thisLink.menus.indexOf( menuSide );
-
-			if ( thisMenuLinkIndex > -1 ) {
-				otherMenuLinkIndex = 1-thisMenuLinkIndex;
-				otherMenuSide      = thisLink.menus[ 1-thisMenuLinkIndex ];
-
-				handleLink ( thisLink.how, menuSide, otherMenuSide );
-			}
-		}
-	}
-	function handleLink ( how, A, B ) {
-		switch ( how ) {
-			case 'one open':
-				handleLink_oneOpen( A, B );
-				break;
-
-			case 'one closed':
-				handleLink_oneClosed( A, B );
-				break;
-
-			case 'one visible':
-				handleLink_oneVisible( A, B );
-				break;
-
-			case 'one hidden':
-				handleLink_oneHidden( A, B );
-				break;
-
-			default:
-				break;
-		}
-	}
-	function handleLink_oneOpen ( A, B ) {
-		var thisMenu = menus[A],
-			otherMenu = menus[B];
-
-		if ( thisMenu.state === 'open' ) {
-			toggleState( B, 'closed' );
-		}
-	}
-	function handleLink_oneClosed ( A, B ) {
-		var thisMenu = menus[A],
-			otherMenu = menus[B];
-
-		if ( thisMenu.state === 'closed' ) {
-			toggleState( B, 'open' );
-		}
-	}
-	function handleLink_oneVisible ( A, B ) {
-		var thisMenu = menus[A],
-			otherMenu = menus[B];
-
-		if ( thisMenu.visible ) {
-			toggleVisibility( B, false );
-		}
-	}
-	function handleLink_oneHidden ( A, B ) {
-		var thisMenu = menus[A],
-			otherMenu = menus[B];
-
-		if ( !thisMenu.visible ) {
-			toggleVisibility( B, true );
-		}
-	}
-
-
-
-	function toggleVisibility ( menuSide, to ) {
-		if ( typeof to === 'boolean' ) {
-			menus[ menuSide ].visible = to;
-		} else {
-			menus[ menuSide ].visible = !menus[ menuSide ].visible;
-		}
-
-		handleLinks( menuSide );
-		setAllMetrics();
-		findContentSize();
-
-		return muSystem;
-	}
-
-	function isVisible ( menuSide ) {
-		return menus[ menuSide ].visible;
-	}
 
 	function stateOf ( menuSide ) {
-		return menus[ menuSide ].state;
+		return menus.items[ menuSide ].state;
 	}
 
 	function isOfState ( menuSide, state ) {
 		return stateOf( menuSide ) === state;
 	}
 
+
+
+
+
+	/*
+	 *	State Linking
+	 */
 	function linkMenus ( which, how, options ) {
 		var o     = options || {},
 			linksMenus = typeof which === 'string' ?
@@ -261,7 +264,7 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 			linkAIndex,
 			linkBIndex,
 
-			menuSides
+			menuSides;
 
 
 		if ( !which ) {
@@ -291,79 +294,107 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 		return muSystem;
 	}
 
-	function addMenu ( menuSide, options ) {
-		var o = options || {},
+	function handleLinks ( menuSide ) {
+		var i = 0,
+			thisLink,
+			thisMenuLinkIndex,
+			otherMenuLinkIndex,
+			otherMenuSide,
 
-			visible = typeof o.visible === 'boolean' ?
-				o.visible :
-				true,
-			state = o.state || 'open',
-			sizeOpen = o.sizeOpen || 50,
-			sizeClosed = o.sizeClosed || 10;
+			thisMenu = menus.items[menuSide],
+			otherMenu;
 
+		for (; i<links.length; i+=1) {
+			thisLink           = links[i];
+			thisMenuLinkIndex  = thisLink.menus.indexOf( menuSide );
 
-		menus[ menuSide ] = {
-			visible: visible,
-			state: state,
+			if ( thisMenuLinkIndex > -1 ) {
+				otherMenuLinkIndex = 1-thisMenuLinkIndex;
+				otherMenuSide      = thisLink.menus[ 1-thisMenuLinkIndex ];
 
-			styles: {
-				open: sizeOpen,
-				closed: sizeClosed
+				handleLink ( thisLink.how, menuSide, otherMenuSide );
 			}
-		};
-		menuOrder.push( menuSide );
-
-
-		setAllMetrics();
-		findContentSize();
-
-
-		return muSystem;
+		}
 	}
 
-	function reorderMenu ( requestedOrder ) {
-		var ro,
-			newOrder = [],
+	function handleLink ( how, A, B ) {
+		switch ( how ) {
+			case 'one open':
+				handleLink_oneOpen( A, B );
+				break;
 
-			item,
-			i = 0;
+			case 'one closed':
+				handleLink_oneClosed( A, B );
+				break;
 
-		if ( typeof requestedOrder === 'undefined' ) {
-			ro = [];
-		} else if ( typeof requestedOrder === 'string' ) {
-			ro = requestedOrder.split(' ');
-		} else {
-			ro = requestedOrder;
+			case 'one visible':
+				handleLink_oneVisible( A, B );
+				break;
+
+			case 'one hidden':
+				handleLink_oneHidden( A, B );
+				break;
+
+			default:
+				break;
 		}
+	}
+	function handleLink_oneOpen ( A, B ) {
+		var thisMenu = menus.items[A],
+			otherMenu = menus.items[B];
 
-		for (; i<ro.length; i+=1 ) {
-			item = ro[i];
-
-			if ( menuOrder.indexOf( item ) > -1 ) {
-				newOrder.push( item );
-			}
+		if ( thisMenu.state === 'open' ) {
+			toggleState( B, 'closed' );
 		}
+	}
+	function handleLink_oneClosed ( A, B ) {
+		var thisMenu = menus.items[A],
+			otherMenu = menus.items[B];
 
-		for ( i=0; i<menuOrder.length; i+=1 ) {
-			item = menuOrder[i];
-
-			if ( newOrder.indexOf( item ) === -1 ) {
-				newOrder.push( item );
-			}
+		if ( thisMenu.state === 'closed' ) {
+			toggleState( B, 'open' );
 		}
+	}
+	function handleLink_oneVisible ( A, B ) {
+		var thisMenu = menus.items[A],
+			otherMenu = menus.items[B];
 
-		menuOrder = newOrder;
+		if ( thisMenu.visible ) {
+			toggleVisibility( B, false );
+		}
+	}
+	function handleLink_oneHidden ( A, B ) {
+		var thisMenu = menus.items[A],
+			otherMenu = menus.items[B];
 
-		setAllMetrics();
-
-		return muSystem;
+		if ( !thisMenu.visible ) {
+			toggleVisibility( B, true );
+		}
 	}
 
-	function menuIndex ( reference ) {
-		if ( typeof reference === 'number' ) {
-			return reference;
-		} else {
-			return menuOrder.indexof( reference );
+
+
+
+
+	/*
+	 *	Element queries
+	 */
+	function resizeHandler () {
+		var timeNow = +new Date(),
+			oldContainerClass;
+
+		if ( timeNow - lastResize > 300 ){
+			oldContainerClass = muSystem.mediaClass;
+			findContentSize();
+
+			if ( delayBroadcastResize ) {
+				$timeout.cancel(delayBroadcastResize);
+			}
+			delayBroadcastResize = $timeout(function() {
+				resizeHandler();
+				$rootScope.$broadcast( 'MU_windowResized' );
+				delayBroadcastResize = false;
+			}, 300);
 		}
 	}
 
@@ -393,47 +424,6 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 		setContextQueryString();
 
 		return contentWidth;
-	}
-
-	function setContextQueryString () {
-		var greaterThan = '',
-			i = 0, query;
-
-		for (; i < contextQueries.w.length; i+=1 ) {
-			query = contextQueries.w[i];
-
-			if ( query <= muSystem.contentWidth ) {
-				greaterThan += ' media__min-width__' + query;
-			} else {
-				break;
-			}
-		}
-
-		muSystem.mediaClass = greaterThan;
-	}
-
-	function resizeHandler () {
-		var timeNow = +new Date(),
-			oldContainerClass;
-
-		if ( timeNow - lastResize > 300 ){
-			oldContainerClass = muSystem.mediaClass;
-			findContentSize();
-
-			if ( broadcastResize ) {
-				$timeout.cancel(broadcastResize);
-			}
-			broadcastResize = $timeout(function() {
-				resizeHandler();
-				$rootScope.$broadcast( 'MU_windowResized' );
-				broadcastResize = false;
-			}, 300);
-		}
-
-	}
-
-	function getSystemMetrics () {
-		return systemMetrics;
 	}
 
 	function addQuery ( type ) {
@@ -468,21 +458,47 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 		return muSystem;
 	}
 
+	function setContextQueryString () {
+		var greaterThan = '',
+			i = 0, query;
+
+		for (; i < contextQueries.w.length; i+=1 ) {
+			query = contextQueries.w[i];
+
+			if ( query <= muSystem.contentWidth ) {
+				greaterThan += ' media__min-width__' + query;
+			} else {
+				break;
+			}
+		}
+
+		muSystem.mediaClass = greaterThan;
+	}
+
+
+
+
+
+	/*
+	 *	Array sorying numerically
+	 */
 	function sortNumber ( a, b ) {
 		return a - b;
 	}
 
+	/*
+	 *	Menu system function
+	 *	May well stay empty, but allows it to be a function in future
+	 */
 	function muSystem () {}
 
-
-
-
-
-	var menus = {},
+	var menus = {
+			items: {},
+			order: []
+		},
 		systemMetrics = {},
 		links = [],
-		menuOrder = [],
-		broadcastResize = false,
+		delayBroadcastResize = false,
 		lastResize = +new Date(),
 		contextQueries = {
 			w: [],
@@ -494,6 +510,7 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 
 
 	angular.element($window).bind('resize', resizeHandler );
+	findContentSize();
 
 
 
@@ -502,22 +519,22 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 	muSystem.add = addMenu;
 	muSystem.link = linkMenus;
 	muSystem.unlink = unlinkMenus;
-	muSystem.reorder = reorderMenu;
+	muSystem.reorder = reorderMenus;
 	muSystem.mediaClass = '';
 	muSystem.addQuery = addQuery;
-
-	findContentSize();
 
 	muSystem.toggleState = toggleState;
 	muSystem.toggleVisibility = toggleVisibility;
 
-	muSystem.setMetrics = setMetrics;
+	muSystem.setOrder = setOrder;
 
 	muSystem.isVisible = isVisible;
 	muSystem.is = isOfState;
 	muSystem.state = stateOf;
-	muSystem.menus = menus;
-	muSystem.metrics = getSystemMetrics;
+	muSystem.menus = menus.items;
+	muSystem.metrics = function () {
+		return systemMetrics;
+	};
 	muSystem.sizeOf = getSize;
 
 	return muSystem;

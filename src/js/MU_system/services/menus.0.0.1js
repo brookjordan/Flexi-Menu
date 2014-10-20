@@ -1,0 +1,467 @@
+//	Any controller containing this service should have this line of code:
+//		$scope.$on( 'MU_windowResized', function() { $scope.$apply(); });
+
+MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
+	function( $window, $rootScope, $timeout ) {
+
+	function mainStyle () {
+		var paddingLeft = getSize('left'),
+			paddingRight = getSize('right'),
+			paddingTop = getSize('top'),
+			paddingBottom = getSize('bottom');
+
+		if ( paddingLeft + paddingRight > returnObject.containerWidth ) {
+			if ( paddingLeft > returnObject.containerWidth ) {
+				paddingRight = 0;
+				paddingLeft = returnObject.containerWidth;
+			} else {
+				paddingRight = returnObject.containerWidth - paddingLeft;
+			}
+		}
+
+		return {
+			'padding-left':   paddingLeft + 'px',
+			'padding-right':  paddingRight + 'px',
+			'padding-top':    paddingTop + 'px',
+			'padding-bottom': paddingBottom + 'px',
+			'z-index':        0
+		};
+	}
+
+	function leftStyle () {
+		var size          = getSize('left'),
+			openSize      = getOpenSize('left'),
+			left          = size - openSize,
+			order         = orderOf('left'),
+			paddingTop    = 0,
+			paddingBottom = 0;
+
+		if ( order <= orderOf('top') ) {
+			paddingTop = getSize('top');
+		}
+
+		if ( order <= orderOf('bottom') ) {
+			paddingBottom = getSize('bottom');
+		}
+
+		return {
+			'width':          openSize + 'px',
+			'left':           left + 'px',
+			'padding-top':    paddingTop + 'px',
+			'padding-bottom': paddingBottom + 'px',
+			'z-index':        order
+		};
+	}
+	function rightStyle () {
+		var size          = getSize('right'),
+			openSize      = getOpenSize('right'),
+			right         = size - openSize,
+			order         = orderOf('right'),
+			paddingTop    = 0,
+			paddingBottom = 0;
+
+		if ( order <= orderOf('top') ) {
+			paddingTop = getSize('top');
+		}
+
+		if ( order <= orderOf('bottom') ) {
+			paddingBottom = getSize('bottom');
+		}
+
+		return {
+			'width':          openSize + 'px',
+			'right':          right + 'px',
+			'padding-top':    paddingTop + 'px',
+			'padding-bottom': paddingBottom + 'px',
+			'z-index':        order
+		};
+	}
+	function topStyle () {
+		var size         = getSize('top'),
+			openSize     = getOpenSize('top'),
+			top          = size - openSize,
+			order        = orderOf('top'),
+			paddingLeft  = 0,
+			paddingRight = 0;
+
+		if ( order <= orderOf('left') ) {
+			paddingLeft = getSize('left');
+		}
+
+		if ( order <= orderOf('right') ) {
+			paddingRight = getSize('right');
+		}
+
+		return {
+			'height':        openSize + 'px',
+			'top':           top + 'px',
+			'padding-left':  paddingLeft + 'px',
+			'padding-right': paddingRight + 'px',
+			'z-index':       order
+		};
+	}
+	function bottomStyle () {
+		var size         = getSize('bottom'),
+			openSize     = getOpenSize('bottom'),
+			bottom       = size - openSize,
+			order        = orderOf('bottom'),
+			paddingLeft  = 0,
+			paddingRight = 0;
+
+		if ( order <= orderOf('left') ) {
+			paddingLeft = getSize('left');
+		}
+
+		if ( order <= orderOf('right') ) {
+			paddingRight = getSize('right');
+		}
+
+		return {
+			'height':        openSize + 'px',
+			'bottom':        bottom + 'px',
+			'padding-left':  paddingLeft + 'px',
+			'padding-right': paddingRight + 'px',
+			'z-index':       order
+		};
+	}
+
+
+
+	function getSize ( menuSide ) {
+		var size;
+
+		if ( menus[ menuSide ] && menus[ menuSide ].visible ) {
+			size = menus[ menuSide ].styles[ menus[ menuSide ].state ];
+		} else {
+			size = 0;
+		}
+
+		return size;
+	}
+
+	function getOpenSize ( menuSide ) {
+		var size;
+
+		size = menus[ menuSide ].styles.open;
+
+		return size;
+	}
+
+	function orderOf ( menuSide ) {
+		var order = 4 - menuOrder.indexOf( menuSide );
+
+		return order;
+	}
+
+	function toggleState ( menuSide, to ) {
+		var thisMenu = menus[ menuSide ];
+
+		if ( typeof to === 'string' ) {
+			thisMenu.state = to;
+		} else {
+			thisMenu.state = thisMenu.state === 'open' ?
+				'closed' :
+				'open';
+		}
+
+		handleLinks( menuSide );
+		findContentWidth();
+
+		return returnObject;
+	}
+	function handleLinks ( menuSide ) {
+		var i = 0,
+			thisLink,
+			thisMenuLinkIndex,
+			otherMenuLinkIndex,
+			otherMenuSide,
+
+			thisMenu = menus[menuSide],
+			otherMenu;
+
+		for (; i<links.length; i+=1) {
+			thisLink           = links[i];
+			thisMenuLinkIndex  = thisLink.menus.indexOf( menuSide );
+
+			if ( thisMenuLinkIndex > -1 ) {
+				otherMenuLinkIndex = 1-thisMenuLinkIndex;
+				otherMenuSide      = thisLink.menus[ 1-thisMenuLinkIndex ];
+				otherMenu          = menus[ otherMenuSide ];
+
+				handleLink ( thisLink.how, thisMenu, otherMenu );
+			}
+		}
+	}
+	function handleLink ( how, A, B ) {
+		switch ( how ) {
+			case 'one open':
+				handleLink_oneOpen( A, B );
+				break;
+			case 'one closed':
+				handleLink_oneClosed( A, B );
+				break;
+			case 'one visible':
+				handleLink_oneVisible( A, B );
+				break;
+			case 'one hidden':
+				handleLink_oneHidden( A, B );
+				break;
+			default:
+				break;
+		}
+	}
+	function handleLink_oneOpen ( A, B ) {
+		if ( A.state === 'open' ) {
+			B.state = 'closed';
+		}
+	}
+	function handleLink_oneClosed ( A, B ) {
+		if ( A.state === 'closed' ) {
+			B.state = 'open';
+		}
+	}
+	function handleLink_oneVisible ( A, B ) {
+		if ( A.visible ) {
+			B.visible = false;
+		}
+	}
+	function handleLink_oneHidden ( A, B ) {
+		if ( !A.visible ) {
+			B.visible = true;
+		}
+	}
+
+
+
+	function toggleVisibility ( menuSide, to ) {
+		if ( typeof to === 'boolean' ) {
+			menus[ menuSide ].visible = to;
+		} else {
+			menus[ menuSide ].visible = !menus[ menuSide ].visible;
+		}
+
+		handleLinks( menuSide );
+		findContentWidth();
+
+		return returnObject;
+	}
+
+	function isVisible ( menuSide ) {
+		return menus[ menuSide ].visible;
+	}
+
+	function stateOf ( menuSide ) {
+		return menus[ menuSide ].state;
+	}
+
+	function isOfState ( menuSide, state ) {
+		return stateOf( menuSide ) === state;
+	}
+
+	function linkMenus ( which, how, options ) {
+		var o     = options || {},
+			linksMenus = typeof which === 'string' ?
+				which.split(' ') :
+				which;
+
+		links.push({
+			menus: linksMenus,
+			how:   how
+		});
+
+		handleLink ( how, menus[ linksMenus[0] ], menus[ linksMenus[1] ] );
+
+		return returnObject;
+	}
+
+	function unlinkMenus ( which, how ) {
+		var i     = 0,
+			thisLink,
+
+			linkAIndex,
+			linkBIndex,
+
+			menus = typeof which === 'string' ?
+				which.split(' ') :
+				which;
+
+		for (; i < links.length; i+=1 ) {
+			thisLink = links[i];
+			linkAIndex = thisLink.menus.indexOf( menus[0] );
+			linkBIndex = thisLink.menus.indexOf( menus[1] );
+
+			if ( linkAIndex !== -1 &&
+				 linkBIndex !== -1 &&
+				 linkAIndex !== linkBIndex ) {
+				links.splice( i, 1 );
+			}
+
+		}
+
+		return returnObject;
+	}
+
+	function addMenu ( title, options ) {
+		var o = options || {},
+
+			visible = typeof o.visible === 'boolean' ?
+				o.visible :
+				true,
+
+			state = o.state || 'open',
+
+			sizeOpen = o.sizeOpen || 50,
+			sizeClosed = o.sizeClosed || 10;
+
+		menus[ title ] = {
+			visible: visible,
+			state: state,
+
+			styles: {
+				open: sizeOpen,
+				closed: sizeClosed
+			}
+		};
+
+		menuOrder.push(title);
+		findContentWidth();
+
+		return returnObject;
+	}
+
+	function reorderMenu ( requestedOrder ) {
+		var ro,
+			newOrder = [],
+
+			item,
+			i = 0;
+
+		if ( typeof requestedOrder === 'undefined' ) {
+			ro = [];
+		} else if ( typeof requestedOrder === 'string' ) {
+			ro = requestedOrder.split(' ');
+		} else {
+			ro = requestedOrder;
+		}
+
+		for (; i<ro.length; i+=1 ) {
+			item = ro[i];
+
+			if ( menuOrder.indexOf( item ) > -1 ) {
+				newOrder.push( item );
+			}
+		}
+
+		for ( i=0; i<menuOrder.length; i+=1 ) {
+			item = menuOrder[i];
+
+			if ( newOrder.indexOf( item ) === -1 ) {
+				newOrder.push( item );
+			}
+		}
+
+		menuOrder = newOrder;
+
+		return returnObject;
+	}
+
+	function menuIndex ( reference ) {
+		if ( typeof reference === 'number' ) {
+			return reference;
+		} else {
+			return menuOrder.indexof( reference );
+		}
+	}
+
+	function findContentWidth () {
+		var MUContiner = document.getElementById('MU').parentNode,
+			containerWidth =
+				MUContiner.getBoundingClientRect().right -
+				MUContiner.getBoundingClientRect().left,
+			contentWidth =
+				containerWidth -
+				getSize( 'left' ) -
+				getSize( 'right' ),
+			greaterThan = '',
+			i = 100;
+
+		while ( i < contentWidth  ) {
+			greaterThan += ' media__min-width__' + i;
+			i += 100;
+		}
+
+		returnObject.mediaClass = greaterThan;
+		returnObject.containerWidth = containerWidth;
+		returnObject.contentWidth = contentWidth;
+
+		return contentWidth;
+	}
+
+	function resizeHandler () {
+		var timeNow = +new Date(),
+			oldContainerClass;
+
+		if ( timeNow - lastResize > 500 ){
+			oldContainerClass = returnObject.mediaClass;
+			findContentWidth();
+
+			if ( broadcastResize ) {
+				$timeout.cancel(broadcastResize);
+			}
+			broadcastResize = $timeout(function() {
+				resizeHandler();
+				$rootScope.$broadcast( 'MU_windowResized' );
+				broadcastResize = false;
+			}, 500);
+		}
+
+	}
+
+	function returnObject () {}
+
+
+
+
+
+	var menus = {},
+		links = [],
+		menuOrder = [],
+		broadcastResize = false,
+		lastResize = +new Date();
+
+
+
+
+
+	angular.element($window).bind('resize', resizeHandler );
+
+
+
+
+
+	returnObject.add = addMenu;
+	returnObject.link = linkMenus;
+	returnObject.unlink = unlinkMenus;
+	returnObject.reorder = reorderMenu;
+	returnObject.mediaClass = '';
+	returnObject.containerWidth = 0;
+	returnObject.contentWidth = 0;
+
+	returnObject.mainStyle = mainStyle;
+	returnObject.topStyle = topStyle;
+	returnObject.bottomStyle = bottomStyle;
+	returnObject.leftStyle = leftStyle;
+	returnObject.rightStyle = rightStyle;
+
+	returnObject.toggleState = toggleState;
+	returnObject.toggleVisibility = toggleVisibility;
+
+	returnObject.isVisible = isVisible;
+	returnObject.is = isOfState;
+	returnObject.state = stateOf;
+	returnObject.menus = menus;
+
+	returnObject.number = 100;
+
+	return returnObject;
+}]);

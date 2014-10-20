@@ -1,0 +1,43 @@
+myApp.controller('MUSystemController', [ 'muMenus', '$scope',
+function( muMenus, $scope ){
+
+	muMenus
+		.add('bottom', {
+			visible: false,
+			state: 'open',
+
+			sizeOpen: 100,
+			sizeClosed: 10
+		})
+		.add('right', {
+			state: 'closed',
+
+			sizeOpen: 320,
+			sizeClosed: 90
+		})
+		.add('left', {
+			state: 'closed',
+
+			sizeOpen: 320,
+			sizeClosed: 90
+		})
+		.add('top', {
+			sizeOpen: 150,
+			sizeClosed: 50
+		});
+
+	this.menus = muMenus;
+
+	this.linkMenus = function (which) {
+		muMenus.link( which, prompt() );
+	};
+
+	this.unlinkMenus = function (which) {
+		muMenus.unlink( which, prompt() );
+	};
+
+	$scope.$on( 'MU_windowResized', function() {
+		$scope.$apply();
+	});
+
+}]);

@@ -1,17 +1,13 @@
-myApp.controller('HeroController', [ 'muMenus',
-function( muMenus ){
+myApp.controller('HeroController', [ 'muContent',
+function( muContent ){
 
 	var self = this;
 
 	function getHeroHeight () {
-		var height = (
-				muMenus.containerHeight -
-				muMenus.sizeOf('top') -
-				muMenus.sizeOf('bottom')
-			) * 0.5;
+		var height = muContent.contentHeight * 0.5;
 
 		return {
-			height: height + 'px'
+			height: muContent.metrics + 'px'
 		};
 	}
 

@@ -133,13 +133,20 @@
 
 	<script type="text/ng-template" id="menus/center.html">
 		<div
+			class="hero"
+			ng-controller="HeroController as HRO"
+			ng-include="'content/hero.html'"
+			ng-style="HRO.contentHeight()"></div>
+
+		<p class="widthDisplay"></p>
+
+		<div
 			ng-controller="GameGridController as GG"
 			class="gameGrid">
 
 				<div
 					class="gameGrid__game"
-					ng-repeat="game in GG.games track by game.id"
-					>
+					ng-repeat="game in GG.games track by game.id">
 					<div
 						class="gameGrid__game__inner"
 						ng-style="{ 'background-color': game.bg }"></div>
@@ -208,7 +215,18 @@
 					ng-click="MU.unlinkMenus( 'top bottom' )" >
 					top and bottom
 				</button>
+				<button
+					ng-click="MU.menus.unlink()" >
+					all
+				</button>
 		</div>
+	</script>
+
+
+	<script type="text/ng-template" id="content/hero.html">
+
+		<h1 class="hero__title">{{ HRO.title }}</h1>
+
 	</script>
 
 

@@ -1,0 +1,25 @@
+.hero {
+	position: relative;
+	z-index: 0;
+	height: 100%;
+	transition: height .2s;
+
+	background: linear-gradient(to bottom right, #777, #BBB);
+
+	&__title {
+		box-sizing: border-box;
+		position: absolute;
+		bottom: 30px;
+
+		width: 100%;
+		line-height: 40px;
+		padding: 10px 30px;
+
+		background: black;
+		background: rgba(0,0,0,0.5);
+
+		color: white;
+		font-size: 2em;
+		text-align: left;
+	}
+}

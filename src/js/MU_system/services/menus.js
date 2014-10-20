@@ -261,18 +261,28 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 			linkAIndex,
 			linkBIndex,
 
-			menus = typeof which === 'string' ?
-				which.split(' ') :
-				which;
+			menuSides
+
+
+		if ( !which ) {
+			links = [];
+			return muSystem();
+		} else if ( typeof which === 'string' ) {
+			menuSides = which.split(' ');
+		} else {
+			menuSides = which;
+		}
+
 
 		for (; i < links.length; i+=1 ) {
 			thisLink = links[i];
-			linkAIndex = thisLink.menus.indexOf( menus[0] );
-			linkBIndex = thisLink.menus.indexOf( menus[1] );
+			linkAIndex = thisLink.menuSides.indexOf( menuSides[0] );
+			linkBIndex = thisLink.menuSides.indexOf( menuSides[1] );
 
 			if (	linkAIndex !== -1 &&
 					linkBIndex !== -1 &&
-					linkAIndex !== linkBIndex ) {
+					linkAIndex !== linkBIndex &&
+					!how || how === thisLink.how ) {
 				links.splice( i, 1 );
 			}
 
@@ -451,6 +461,7 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 	muSystem.state = stateOf;
 	muSystem.menus = menus;
 	muSystem.metrics = getSystemMetrics;
+	muSystem.sizeOf = getSize;
 
 	muSystem.number = 100;
 

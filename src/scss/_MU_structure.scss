@@ -24,13 +24,12 @@
 		}
 
 		&__content {
-			height: 200%;
 			min-height: 1500px;
 			min-width: 220px;
 
 			text-align: center;
 
-			background-image: linear-gradient( to top right, rgba(255,0,128,0.5), rgba(255,0,128,0) );
+			background-image: linear-gradient( to top right, rgba(128,128,150,0.5), rgba(128,128,150,0), rgba(128,128,150,0.5) );
 
 			button {
 				background: white;
@@ -92,7 +91,7 @@
 	.MU__center {
 		background-color: #111;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		display: block;
 
 		content: '>100px';
@@ -103,7 +102,7 @@
 	.MU__center {
 		background-color: #222;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		content: '>200px';
 	}
 }
@@ -112,7 +111,7 @@
 	.MU__center {
 		background-color: #333;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		content: '>300px';
 	}
 }
@@ -121,7 +120,7 @@
 	.MU__center {
 		background-color: #444;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		content: '>400px';
 	}
 }
@@ -130,7 +129,7 @@
 	.MU__center {
 		background-color: #555;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		content: '>500px';
 	}
 }
@@ -139,7 +138,7 @@
 	.MU__center {
 		background-color: #666;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		content: '>600px';
 	}
 }
@@ -148,7 +147,7 @@
 	.MU__center {
 		background-color: #777;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		content: '>700px';
 	}
 }
@@ -157,7 +156,7 @@
 	.MU__center {
 		background-color: #888;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		content: '>800px';
 	}
 }
@@ -167,7 +166,7 @@
 		background-color: #999;
 		color: black;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		content: '>900px';
 	}
 }
@@ -193,7 +192,7 @@
 	.MU__center {
 		background-color: #BBB;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		content: '>1100px';
 	}
 }
@@ -202,7 +201,7 @@
 	.MU__center {
 		background-color: #CCC;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		content: '>1200px';
 	}
 }
@@ -211,7 +210,7 @@
 	.MU__center {
 		background-color: #DDD;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		content: '>1300px';
 	}
 }
@@ -220,7 +219,7 @@
 	.MU__center {
 		background-color: #EEE;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		content: '>1400px';
 	}
 }
@@ -229,7 +228,7 @@
 	.MU__center {
 		background-color: #FFF;
 	}
-	.MU__center__content:after {
+	.MU__center__content:before {
 		content: '>1500px';
 	}
 }

@@ -1,4 +1,79 @@
 var myApp = angular.module('myApp', ['MU']);
+;myApp.controller('GameGridController', [ 'muMenus', '$scope', "$interval",
+function( muMenus, $scope, $interval ){
+
+	var self = this,
+		i = 0;
+
+	this.games = [];
+
+	for (; i<20; i+=1) {
+		this.games.push({
+			id: i,
+			bg: 'rgb(' +
+				(110 + Math.floor(Math.random()*30)) + ',' +
+				(110 + Math.floor(Math.random()*30)) + ',' +
+				(110 + Math.floor(Math.random()*30)) +
+			')'
+		});
+	}
+
+
+}]);
+;myApp.controller('MUMenuLeftController', [ 'muMenus', '$scope',
+function( muMenus, $scope ){
+
+	var self = this;
+
+	this.items = [0,1];
+	this.openItem = -1;
+
+	this.toggle = function ( $index ) {
+		if ( this.openItem === $index ) {
+			this.openItem = -1;
+			muMenus.toggleState( 'left', 'closed' )
+		} else {
+			this.openItem = $index;
+			muMenus.toggleState( 'left', 'open' )
+		}
+	};
+
+	$scope.$on('MU_stateToggled_left', function( event, newState ){
+		if ( newState === 'closed' ) {
+			self.openItem = -1;
+		}
+	});
+
+
+
+}]);
+;myApp.controller('MUMenuRightController', [ 'muMenus', '$scope',
+function( muMenus, $scope ){
+
+	var self = this;
+
+	this.items = [0,1,2,3,4];
+	this.openItem = -1;
+
+	this.toggle = function ( $index ) {
+		if ( this.openItem === $index ) {
+			this.openItem = -1;
+			muMenus.toggleState( 'right', 'closed' )
+		} else {
+			this.openItem = $index;
+			muMenus.toggleState( 'right', 'open' )
+		}
+	};
+
+	$scope.$on('MU_stateToggled_right', function( event, newState ){
+		if ( newState === 'closed' ) {
+			self.openItem = -1;
+		}
+	});
+
+
+
+}]);
 ;myApp.controller('MUSystemController', [ 'muMenus', '$scope', "$interval",
 function( muMenus, $scope, $interval ){
 
@@ -90,15 +165,16 @@ function( muMenus, $scope, $interval ){
 		.add('right', {
 			state: 'closed',
 
-			sizeOpen: 250,
+			sizeOpen: 260,
 			sizeClosed: 50
 		})
 		.add('left', {
 			state: 'closed',
 
-			sizeOpen: 250,
+			sizeOpen: 260,
 			sizeClosed: 50
-		});
+		})
+		.link( 'left right', 'one open' );
 
 
 

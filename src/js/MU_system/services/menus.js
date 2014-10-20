@@ -129,6 +129,8 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 		setAllMetrics();
 		findContentSize();
 
+		$rootScope.$broadcast( 'MU_stateToggled_' + menuSide, thisMenu.state );
+
 		return muSystem;
 	}
 	function handleLinks ( menuSide ) {
@@ -148,9 +150,8 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 			if ( thisMenuLinkIndex > -1 ) {
 				otherMenuLinkIndex = 1-thisMenuLinkIndex;
 				otherMenuSide      = thisLink.menus[ 1-thisMenuLinkIndex ];
-				otherMenu          = menus[ otherMenuSide ];
 
-				handleLink ( thisLink.how, thisMenu, otherMenu );
+				handleLink ( thisLink.how, menuSide, otherMenuSide );
 			}
 		}
 	}
@@ -159,37 +160,53 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 			case 'one open':
 				handleLink_oneOpen( A, B );
 				break;
+
 			case 'one closed':
 				handleLink_oneClosed( A, B );
 				break;
+
 			case 'one visible':
 				handleLink_oneVisible( A, B );
 				break;
+
 			case 'one hidden':
 				handleLink_oneHidden( A, B );
 				break;
+
 			default:
 				break;
 		}
 	}
 	function handleLink_oneOpen ( A, B ) {
-		if ( A.state === 'open' ) {
-			B.state = 'closed';
+		var thisMenu = menus[A],
+			otherMenu = menus[B];
+
+		if ( thisMenu.state === 'open' ) {
+			toggleState( B, 'closed' );
 		}
 	}
 	function handleLink_oneClosed ( A, B ) {
-		if ( A.state === 'closed' ) {
-			B.state = 'open';
+		var thisMenu = menus[A],
+			otherMenu = menus[B];
+
+		if ( thisMenu.state === 'closed' ) {
+			toggleState( B, 'open' );
 		}
 	}
 	function handleLink_oneVisible ( A, B ) {
-		if ( A.visible ) {
-			B.visible = false;
+		var thisMenu = menus[A],
+			otherMenu = menus[B];
+
+		if ( thisMenu.visible ) {
+			toggleVisibility( B, false );
 		}
 	}
 	function handleLink_oneHidden ( A, B ) {
-		if ( !A.visible ) {
-			B.visible = true;
+		var thisMenu = menus[A],
+			otherMenu = menus[B];
+
+		if ( !thisMenu.visible ) {
+			toggleVisibility( B, true );
 		}
 	}
 
@@ -232,7 +249,7 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 			how:   how
 		});
 
-		handleLink ( how, menus[ linksMenus[0] ], menus[ linksMenus[1] ] );
+		handleLink ( how, linksMenus[0], linksMenus[1] );
 
 		return muSystem;
 	}

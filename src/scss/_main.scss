@@ -27,17 +27,27 @@ html, body {
 
 	transition: all .2s;
 
+	&-left,
+	&-right {
+		background: #333;
+		overflow: auto;
+	}
 
 	&-left {
 		left: 0;
-		background: #333;
 
-
+		.MU__menu-left--hidden & {
+			top: -50px;
+		}
 	}
 
 	&-right {
 		right: 0;
 		background: #333;
+
+		.MU__menu-right--hidden & {
+			right: -50px;
+		}
 	}
 
 	&__item {
@@ -86,14 +96,10 @@ html, body {
 
 	color: white;
 
-	&__left,
 	&__right {
 		height: 100%;
 		width: 33%;
 		background: #222;
-	}
-	&__left {
-		float: left;
 	}
 	&__right {
 		float: right;
@@ -110,6 +116,10 @@ html, body {
 	color: white;
 }
 
+.MU__menu-bottom__inner {
+	text-align: center;
+	line-height: 45px;
+}
 .MU__menu-bottom__switch {
 	float: right;
 

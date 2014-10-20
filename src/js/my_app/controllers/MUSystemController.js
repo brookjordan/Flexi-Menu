@@ -89,15 +89,16 @@ function( muMenus, $scope, $interval ){
 		.add('right', {
 			state: 'closed',
 
-			sizeOpen: 250,
+			sizeOpen: 260,
 			sizeClosed: 50
 		})
 		.add('left', {
 			state: 'closed',
 
-			sizeOpen: 250,
+			sizeOpen: 260,
 			sizeClosed: 50
-		});
+		})
+		.link( 'left right', 'one open' );
 
 
 

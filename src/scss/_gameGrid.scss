@@ -1,0 +1,53 @@
+.gameGrid {
+	padding: 10px;
+	margin: 0 auto;
+	max-width: 1280px;
+
+	&__game {
+		box-sizing: border-box;
+		float: left;
+
+		width: 100%;
+		max-width: 380px;
+		height: 150px;
+		padding: 10px;
+
+		&__inner {
+			width: 100%;
+			height: 100%;
+
+			box-shadow: 0 1px 3px rgba(0,0,0,.5);
+		}
+	}
+}
+
+.gameGrid:before,
+.gameGrid:after {
+	content: '';
+	display: table;
+	clear: both;
+}
+
+.media__min-width__300 {
+	.gameGrid__game {
+		width: 50%;
+	}
+}
+
+.media__min-width__500 {
+	.gameGrid__game {
+		width: 33.333333%;
+	}
+}
+
+.media__min-width__700 {
+	.gameGrid__game {
+		height: 250px;
+	}
+}
+
+.media__min-width__1100 {
+	.gameGrid__game {
+		width: 25%;
+	}
+}

@@ -24,71 +24,10 @@
 				ng-include="'menus/' + title + '.html'"></div>
 		</div>
 
-		<div
-			class="icons icons-left"
-			ng-style="{ top: MU.menus.menus.left.metrics.top + 'px' }"
-			ng-click="MU.menus.toggleState( 'left' )">
-			{{ MU.menus.left.metrics.top }}
-		</div>
-
-		<div
-			class="icons icons-right"
-			ng-style="{ top: MU.menus.menus.right.metrics.top + 'px' }"
-			ng-click="MU.menus.toggleState( 'right' )">
-			{{ MU.menus.right.metrics.top }}
-		</div>
-
 		<div class="MU__center">
 			<div class="MU__center__scroll">
-				<div class="MU__center__content">
-						<span>Toggle open:</span>
-						<button
-							ng-repeat="(title, menu) in MU.menus.menus track by title"
-							ng-click="MU.menus.toggleState( title )" >
-							{{ title }}
-						</button>
-					<hr>
-						<span>Toggle visiblity:</span>
-						<button
-							ng-repeat="(title, menu) in MU.menus.menus track by title"
-							ng-click="MU.menus.toggleVisibility( title )" >
-							<span ng-if="MU.menus.isVisible( title )">Hide {{ title }}</span>
-							<span ng-if="!MU.menus.isVisible( title )">Show {{ title }}</span>
-						</button>
-					<hr>
-						<span>Prioritise:</span>
-						<button
-							ng-repeat="(title, menu) in MU.menus.menus track by title"
-							ng-click="MU.menus.reorder( title )" >
-							Lift {{ title }}
-						</button>
+				<div class="MU__center__content" ng-include="'menus/center.html'">
 
-
-					<hr>
-
-						<span>Link:</span>
-						<button
-							ng-show="MU.menus.menus['left'] && MU.menus.menus['right']"
-							ng-click="MU.linkMenus( 'left right' )" >
-							left and right
-						</button>
-						<button
-							ng-show="MU.menus.menus['top'] && MU.menus.menus['bottom']"
-							ng-click="MU.linkMenus( 'top bottom' )" >
-							top and bottom
-						</button>
-					<br>
-						<span>Unlink:</span>
-						<button
-							ng-show="MU.menus.menus['left'] && MU.menus.menus['right']"
-							ng-click="MU.unlinkMenus( 'left right' )" >
-							left and right
-						</button>
-						<button
-							ng-show="MU.menus.menus['top'] && MU.menus.menus['bottom']"
-							ng-click="MU.unlinkMenus( 'top bottom' )" >
-							top and bottom
-						</button>
 				</div>
 			</div>
 		</div>
@@ -96,29 +35,148 @@
 
 
 
+
+
+
+
+
+
+
 	<script type="text/ng-template" id="menus/top.html">
-		<div
-			class="MU__menu-top__switch"
-			ng-click="MU.menus.toggleState( 'top' )">
-			<h1 class="MU__menu-top__switch__left">{{ title }}</h1>
-			<h1 class="MU__menu-top__switch__right">{{ title }}</h1>
+		<nav class="MU__menu-top__nav">
+			ONE - - TWO - - THREE - - FOUR
+		</nav>
+		<div class="MU__menu-top__switch">
+
+			<div class="MU__menu-top__switch__left"></div>
+			<button
+				class="MU__menu-top__switch__right"
+				ng-click="MU.menus.toggleState( 'top' )">
+				Toggle Nav
+			</button>
 		</div>
 	</script>
+
+
+
+
+
 
 	<script type="text/ng-template" id="menus/bottom.html">
-		<div
+		<button
 			class="MU__menu-bottom__switch"
-			ng-click="MU.menus.toggleState( 'bottom' )">
-			<h1>{{ title }}</h1>
+			ng-click="MU.menus.toggleVisibility( 'bottom' )">
+		</button>
+	</script>
+
+
+
+
+
+
+	<script type="text/ng-template" id="menus/left.html">
+		<div
+			class="MU__navIcons MU__navIcons-left"
+			ng-style="{ top: MU.menus.menus.left.metrics.top + 'px', height: MU.menus.containerHeight - MU.menus.menus.left.metrics.top - MU.menus.menus.left.metrics.bottom + 'px' }">
+			<button
+				class="MU__navIcons__item"
+				ng-click="MU.menus.toggleState( 'left' ); MU.selectLeft( $index );"
+				ng-repeat="button in MU.leftIcons"
+				ng-class="{ 'MU__navIcons-left__item--active': MU.leftOpen === $index }">
+				{{ $index }}
+			</button>
+		</div>
+
+		<div class="MU-you">
+			<p class="MU__mainNavItem">ONE</p>
+			<p class="MU__mainNavItem">ONE</p>
+			<p class="MU__mainNavItem">ONE</p>
+			<p class="MU__mainNavItem">ONE</p>
+			<p class="MU__mainNavItem">ONE</p>
 		</div>
 	</script>
 
-	<script type="text/ng-template" id="menus/left.html">
-		<h1>{{ title }}</h1>
-	</script>
+
+
+
+
 
 	<script type="text/ng-template" id="menus/right.html">
-		<h1>{{ title }}</h1>
+		<div
+			class="MU__navIcons MU__navIcons-right"
+			ng-style="{ top: MU.menus.menus.right.metrics.top + 'px', height: MU.menus.containerHeight - MU.menus.menus.right.metrics.top - MU.menus.menus.right.metrics.bottom + 'px' }">
+			<button
+				class="MU__navIcons__item"
+				ng-click="MU.menus.toggleState( 'right' ); MU.selectRight( $index );"
+				ng-repeat="button in MU.rightIcons"
+				ng-class="{ 'MU__navIcons-right__item--active': MU.rightOpen === $index }">
+				{{ $index }}
+			</button>
+		</div>
+
+		<div class="MU-me">
+			<p class="MU__mainNavItem">ONE</p>
+			<p class="MU__mainNavItem">ONE</p>
+			<p class="MU__mainNavItem">ONE</p>
+			<p class="MU__mainNavItem">ONE</p>
+			<p class="MU__mainNavItem">ONE</p>
+		</div>
+	</script>
+
+
+
+
+
+
+	<script type="text/ng-template" id="menus/center.html">
+		<span>Toggle open:</span>
+			<button
+				ng-repeat="(title, menu) in MU.menus.menus track by title"
+				ng-click="MU.menus.toggleState( title )" >
+				{{ title }}
+			</button>
+		<hr>
+			<span>Toggle visiblity:</span>
+			<button
+				ng-repeat="(title, menu) in MU.menus.menus track by title"
+				ng-click="MU.menus.toggleVisibility( title )" >
+				<span ng-if="MU.menus.isVisible( title )">Hide {{ title }}</span>
+				<span ng-if="!MU.menus.isVisible( title )">Show {{ title }}</span>
+			</button>
+		<hr>
+			<span>Prioritise:</span>
+			<button
+				ng-repeat="(title, menu) in MU.menus.menus track by title"
+				ng-click="MU.menus.reorder( title )" >
+				Lift {{ title }}
+			</button>
+
+
+		<hr>
+
+			<span>Link:</span>
+			<button
+				ng-show="MU.menus.menus['left'] && MU.menus.menus['right']"
+				ng-click="MU.linkMenus( 'left right' )" >
+				left and right
+			</button>
+			<button
+				ng-show="MU.menus.menus['top'] && MU.menus.menus['bottom']"
+				ng-click="MU.linkMenus( 'top bottom' )" >
+				top and bottom
+			</button>
+		<br>
+			<span>Unlink:</span>
+			<button
+				ng-show="MU.menus.menus['left'] && MU.menus.menus['right']"
+				ng-click="MU.unlinkMenus( 'left right' )" >
+				left and right
+			</button>
+			<button
+				ng-show="MU.menus.menus['top'] && MU.menus.menus['bottom']"
+				ng-click="MU.unlinkMenus( 'top bottom' )" >
+				top and bottom
+			</button>
 	</script>
 
 

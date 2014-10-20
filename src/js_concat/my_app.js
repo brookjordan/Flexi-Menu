@@ -1,6 +1,8 @@
 var myApp = angular.module('myApp', ['MU']);
-;myApp.controller('MUSystemController', [ 'muMenus', '$scope',
-function( muMenus, $scope ){
+;myApp.controller('MUSystemController', [ 'muMenus', '$scope', "$interval",
+function( muMenus, $scope, $interval ){
+
+	var self = this;
 
 	//	Creating styles
 	this.leftStyle = function () {
@@ -74,27 +76,27 @@ function( muMenus, $scope ){
 
 	//	Adding menus
 	muMenus
+		.add('top', {
+			sizeOpen: 80,
+			sizeClosed: 50
+		})
 		.add('bottom', {
-			visible: false,
+			//visible: false,
 			state: 'open',
 
-			sizeOpen: 100,
-			sizeClosed: 10
+			sizeOpen: 40,
+			sizeClosed: 40
 		})
 		.add('right', {
 			state: 'closed',
 
-			sizeOpen: 320,
-			sizeClosed: 50
-		})
-		.add('top', {
-			sizeOpen: 150,
+			sizeOpen: 250,
 			sizeClosed: 50
 		})
 		.add('left', {
 			state: 'closed',
 
-			sizeOpen: 320,
+			sizeOpen: 250,
 			sizeClosed: 50
 		});
 
@@ -102,6 +104,27 @@ function( muMenus, $scope ){
 
 	//	Setting menus to be in HTML
 	this.menus = muMenus;
+
+	this.leftIcons = '0 1 2 3 4'.split(' ');
+	this.rightIcons = '0 1 2 3'.split(' ');
+
+	this.leftOpen = -1;
+	this.rightOpen = -1;
+
+	this.selectLeft = function ( $index ) {
+		if (self.leftOpen !== $index) {
+			self.leftOpen = $index
+		} else {
+			self.leftOpen = -1
+		}
+	}
+	this.selectRight = function ( $index ) {
+		if (self.rightOpen !== $index) {
+			self.rightOpen = $index
+		} else {
+			self.rightOpen = -1
+		}
+	}
 
 
 

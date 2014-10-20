@@ -26,6 +26,7 @@
 		&__content {
 			height: 200%;
 			min-height: 1500px;
+			min-width: 220px;
 
 			text-align: center;
 
@@ -33,11 +34,14 @@
 
 			button {
 				background: white;
+				color: black;
+
 				padding: 10px;
 				margin: 10px;
 				outline: none;
 
-				border-radius: 10px;
+				border-radius: 5px;
+
 			}
 		}
 	}
@@ -80,29 +84,6 @@
 		&-right {
 			right: 0%;
 			bottom: 0%;
-		}
-
-
-
-		&-top {
-			background-color: red;
-		}
-		&-bottom {
-			background-color: blue;
-		}
-		&-left {
-			background-color: yellow;
-
-			&__inner {
-				//background: transparent 100% 0 no-repeat url("../images/tabsLeft.png");
-			}
-		}
-		&-right {
-			background-color: green;
-
-			&__inner {
-				//background: transparent 0 0 no-repeat url("../images/tabsRight.png");
-			}
 		}
 	}
 }
@@ -194,9 +175,17 @@
 .media__min-width__1000 {
 	.MU__center {
 		background-color: #AAA;
-	}
-	.MU__center__content:after {
-		content: '>1000px';
+
+		&__content {
+			button {
+				background: black;
+				color: white;
+			}
+
+			&:after {
+				content: '>1000px';
+			}
+		}
 	}
 }
 

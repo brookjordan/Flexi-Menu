@@ -128,7 +128,7 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 
 		handleLinks( menuSide );
 		setAllMetrics();
-		findContentWidth();
+		findContentSize();
 
 		return muSystem;
 	}
@@ -205,7 +205,7 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 
 		handleLinks( menuSide );
 		setAllMetrics();
-		findContentWidth();
+		findContentSize();
 
 		return muSystem;
 	}
@@ -289,7 +289,7 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 
 
 		setAllMetrics();
-		findContentWidth();
+		findContentSize();
 
 
 		return muSystem;
@@ -341,11 +341,14 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 		}
 	}
 
-	function findContentWidth () {
+	function findContentSize () {
 		var MUContiner = document.getElementById('MU').parentNode,
 			containerWidth =
 				MUContiner.getBoundingClientRect().right -
 				MUContiner.getBoundingClientRect().left,
+			containerHeight =
+				MUContiner.getBoundingClientRect().bottom -
+				MUContiner.getBoundingClientRect().top,
 			contentWidth =
 				containerWidth -
 				getSize( 'left' ) -
@@ -362,6 +365,8 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 		muSystem.containerWidth = containerWidth;
 		muSystem.contentWidth = contentWidth;
 
+		muSystem.containerHeight = containerHeight;
+
 		return contentWidth;
 	}
 
@@ -369,9 +374,9 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 		var timeNow = +new Date(),
 			oldContainerClass;
 
-		if ( timeNow - lastResize > 500 ){
+		if ( timeNow - lastResize > 300 ){
 			oldContainerClass = muSystem.mediaClass;
-			findContentWidth();
+			findContentSize();
 
 			if ( broadcastResize ) {
 				$timeout.cancel(broadcastResize);
@@ -380,7 +385,7 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 				resizeHandler();
 				$rootScope.$broadcast( 'MU_windowResized' );
 				broadcastResize = false;
-			}, 500);
+			}, 300);
 		}
 
 	}
@@ -417,8 +422,8 @@ MU_System.factory('muMenus', [ '$window', '$rootScope', '$timeout',
 	muSystem.unlink = unlinkMenus;
 	muSystem.reorder = reorderMenu;
 	muSystem.mediaClass = '';
-	muSystem.containerWidth = 0;
-	muSystem.contentWidth = 0;
+
+	findContentSize();
 
 	muSystem.toggleState = toggleState;
 	muSystem.toggleVisibility = toggleVisibility;

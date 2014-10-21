@@ -132,14 +132,16 @@ MU_System.factory('muMenus', [ '$rootScope', '$timeout',
 	/*
 	 *	Visibility
 	 */
-	function toggleVisibility ( menuID, to ) {
+	function toggleVisibility ( menuID, to, ignoreLinks ) {
 		if ( typeof to === 'boolean' ) {
 			menus.items[ menuID ].visible = to;
 		} else {
 			menus.items[ menuID ].visible = !menus.items[ menuID ].visible;
 		}
 
-		handleLinks( menuID );
+		if ( !ignoreLinks ) {
+			handleLinks( menuID )
+		}
 		setAllOrders();
 
 		$rootScope.$broadcast( 'MU_visibilityToggled', { menuID: menuID });
@@ -158,7 +160,7 @@ MU_System.factory('muMenus', [ '$rootScope', '$timeout',
 	/*
 	 *	State manipulation
 	 */
-	function toggleState ( menuID, to ) {
+	function toggleState ( menuID, to, ignoreLinks ) {
 		var thisMenu = menus.items[ menuID ];
 
 		if ( typeof to === 'string' ) {
@@ -169,7 +171,9 @@ MU_System.factory('muMenus', [ '$rootScope', '$timeout',
 				'open';
 		}
 
-		handleLinks( menuID );
+		if ( !ignoreLinks ) {
+			handleLinks( menuID );
+		}
 		setAllOrders();
 
 		$rootScope.$broadcast( 'MU_stateToggled', { menuID: menuID, newState: thisMenu.state} );
@@ -295,7 +299,7 @@ MU_System.factory('muMenus', [ '$rootScope', '$timeout',
 			otherMenu = menus.items[B];
 
 		if ( thisMenu.state === 'open' ) {
-			toggleState( B, 'closed' );
+			toggleState( B, 'closed', true );
 		}
 	}
 	function handleLink_oneClosed ( A, B ) {
@@ -303,7 +307,7 @@ MU_System.factory('muMenus', [ '$rootScope', '$timeout',
 			otherMenu = menus.items[B];
 
 		if ( thisMenu.state === 'closed' ) {
-			toggleState( B, 'open' );
+			toggleState( B, 'open', true );
 		}
 	}
 	function handleLink_oneVisible ( A, B ) {
@@ -311,7 +315,7 @@ MU_System.factory('muMenus', [ '$rootScope', '$timeout',
 			otherMenu = menus.items[B];
 
 		if ( thisMenu.visible ) {
-			toggleVisibility( B, false );
+			toggleVisibility( B, false, true );
 		}
 	}
 	function handleLink_oneHidden ( A, B ) {
@@ -319,7 +323,7 @@ MU_System.factory('muMenus', [ '$rootScope', '$timeout',
 			otherMenu = menus.items[B];
 
 		if ( !thisMenu.visible ) {
-			toggleVisibility( B, true );
+			toggleVisibility( B, true, true );
 		}
 	}
 

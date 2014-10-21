@@ -17,8 +17,12 @@ function( muMenus, $scope ){
 	};
 
 	$scope.$on('MU_stateToggled', function( event, args ){
-		if ( args.menuID === 'left' && args.newState === 'closed' ) {
-			self.openItem = -1;
+		if ( args.menuID === 'left' ) {
+			if ( args.newState === 'closed' ) {
+				self.openItem = -1;
+			} else if ( self.openItem === -1 ) {
+				self.openItem = 0;
+			}
 		}
 	});
 

@@ -1,5 +1,5 @@
-myApp.controller('MUSystemController', [ 'muMenus', '$scope', "$interval",
-function( muMenus, $scope, $interval ){
+myApp.controller('MUSystemController', [ 'muMenus', 'muContent', '$scope', "$interval",
+function( muMenus, muContent, $scope, $interval ){
 
 	var self = this;
 
@@ -60,7 +60,7 @@ function( muMenus, $scope, $interval ){
 			//visible: false,
 			state: 'open',
 
-			sizeOpen: 100,
+			sizeOpen: 60,
 			sizeClosed: 50
 		})
 		.add('right', {
@@ -73,13 +73,15 @@ function( muMenus, $scope, $interval ){
 			sizeOpen: 260,
 			sizeClosed: 50
 		})
-		.link( 'left right', 'one open' )
-		.addQuery( 'w', '100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700' );
+		.link( 'left right', 'one open' );
+
+	muContent.addQuery( 'w', '100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700' );
 
 
 
 	//	Setting menus to be in HTML
 	this.menus = muMenus;
+	this.content = muContent;
 
 	this.leftIcons = '0 1 2 3 4'.split(' ');
 	this.rightIcons = '0 1 2 3'.split(' ');

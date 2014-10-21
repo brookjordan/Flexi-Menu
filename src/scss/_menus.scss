@@ -6,7 +6,7 @@ $right-size-open: 260px;
 $right-size-closed: 50px;
 $right-offset-closed: $right-size-closed - $right-size-open;
 
-$bottom-size-open: 100px;
+$bottom-size-open: 60px;
 $bottom-size-closed: 50px;
 $bottom-offset-closed: $bottom-size-closed - $bottom-size-open;
 
@@ -270,7 +270,7 @@ $left-offset-closed: $left-size-closed - $left-size-open;
 
 	&-left,
 	&-right {
-		position: fixed;
+		position: absolute;
 		top: 0;
 		background: #333;
 		overflow: auto;
@@ -280,38 +280,23 @@ $left-offset-closed: $left-size-closed - $left-size-open;
 	}
 
 	&-left {
-		left: 0;
+		right: 0;
+		width: $left-size-closed;
 
-		.MU-top--open.MU-topAboveLeft & {
-			padding-top: $top-size-open;
-		}
-		.MU-top--closed.MU-topAboveLeft & {
-			padding-top: $top-size-closed;
+		.MU-left--open & {
+			right: 100%;
+			margin-right: -$left-size-closed;
 		}
 
-		.MU-bottom--open.MU-bottomAboveLeft & {
-			padding-bottom: $bottom-size-open;
-		}
-		.MU-bottom--closed.MU-bottomAboveLeft & {
-			padding-bottom: $bottom-size-closed;
-		}
 	}
 
 	&-right {
-		right: 0;
+		left: 0;
+		width: $right-size-closed;
 
-		.MU-top--open.MU-topAboveRight & {
-			padding-top: $top-size-open;
-		}
-		.MU-top--closed.MU-topAboveRight & {
-			padding-top: $top-size-closed;
-		}
-
-		.MU-bottom--open.MU-bottomAboveRight & {
-			padding-bottom: $bottom-size-open;
-		}
-		.MU-bottom--closed.MU-bottomAboveRight & {
-			padding-bottom: $bottom-size-closed;
+		.MU-right--open & {
+			left: 100%;
+			margin-left: -$right-size-closed;
 		}
 	}
 

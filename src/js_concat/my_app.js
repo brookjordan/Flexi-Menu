@@ -29,7 +29,7 @@ function( muContent ){
 		var height = muContent.contentHeight * 0.5;
 
 		return {
-			height: muContent.metrics + 'px'
+			height: height + 'px'
 		};
 	}
 

@@ -572,6 +572,12 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 	};
 	muContent.mediaClass = '';
 
+	muContent.containerWidth = 0;
+	muContent.contentWidth = 0;
+
+	muContent.containerHeight = 0;
+	muContent.contentHeight = 0;
+
 
 
 

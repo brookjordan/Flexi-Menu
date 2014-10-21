@@ -4,7 +4,10 @@ function( muContent ){
 	var self = this;
 
 	function getHeroHeight () {
-		var height = muContent.contentHeight * 0.5;
+		var height = Math.max(
+				200,
+				Math.min( muContent.contentHeight * 0.6, muContent.contentWidth )
+			);
 
 		return {
 			height: height + 'px'

@@ -49,9 +49,48 @@ grunt.initConfig({
 
 
 
+  ngdocs: {
+    all: [ 'src/js/**/*.js', ],
+  },
+
+
+
+  ngtemplates:  {
+    options: {
+      htmlmin: debug_mode ?
+        {
+          collapseBooleanAttributes:      false,
+          collapseWhitespace:             false,
+          removeAttributeQuotes:          false,
+          removeComments:                 false,
+          removeEmptyAttributes:          false,
+          removeRedundantAttributes:      false,
+          removeScriptTypeAttributes:     false,
+          removeStyleLinkTypeAttributes:  false
+        } :
+        {
+          collapseBooleanAttributes:      true,
+          collapseWhitespace:             true,
+          removeAttributeQuotes:          true,
+          removeComments:                 true, // Only if you don't use comment directives!
+          removeEmptyAttributes:          true,
+          removeRedundantAttributes:      true,
+          removeScriptTypeAttributes:     true,
+          removeStyleLinkTypeAttributes:  true
+        },
+    },
+
+    myApp:        {
+      src:      'templates/**/**.html',
+      dest:     'src/js/my_app/templates.js',
+    },
+  },
+
+
+
   concat: {
     options: {
-      separator: '\n;',
+      //separator: '\n;',
     },
 
     mu_system: {
@@ -60,15 +99,9 @@ grunt.initConfig({
     },
 
     my_app: {
-      src: [ 'src/js/my_app/app.js', 'src/js/my_app/services/*.js', 'src/js/my_app/directives/*.js', 'src/js/my_app/controllers/*.js', ],
+      src: [ 'src/js/my_app/app.js', 'src/js/my_app/templates.js', 'src/js/my_app/services/*.js', 'src/js/my_app/directives/*.js', 'src/js/my_app/controllers/*.js', ],
       dest: 'src/js_concat/my_app.js',
     },
-  },
-
-
-
-  ngdocs: {
-    all: [ 'src/js/**/*.js', ],
   },
 
 
@@ -102,8 +135,8 @@ grunt.initConfig({
     },
 
     styles: {
-      files: ['src/scss/*.scss', 'src/scss/**/*.scss'],
-      tasks: ['sass', 'autoprefixer'],
+      files: ['src/scss/*.scss', 'src/scss/**/*.scss', ],
+      tasks: ['sass', 'autoprefixer', ],
       options: {
         spawn: false,
         livereload: true,
@@ -111,8 +144,17 @@ grunt.initConfig({
     },
 
     scripts: {
-      files: ['src/js/*.js', 'src/js/**/*.js'],
-      tasks: ['concat', 'uglify'],
+      files: ['src/js/*.js', 'src/js/**/*.js', ],
+      tasks: ['concat', 'uglify', ],
+      options: {
+        spawn: false,
+        livereload: true,
+      },
+    },
+
+    templates: {
+      files: ['templates/**/*.html', ],
+      tasks: ['ngtemplates', 'concat', 'uglify', ],
       options: {
         spawn: false,
         livereload: true,
@@ -120,7 +162,7 @@ grunt.initConfig({
     },
 
     html: {
-      files: ['**/*.html'],
+      files: ['**/*.html', ],
       tasks: [],
       options: {
         spawn: false,
@@ -139,13 +181,17 @@ grunt.initConfig({
 
 grunt.loadNpmTasks('grunt-contrib-sass');
 grunt.loadNpmTasks('grunt-autoprefixer');
-grunt.loadNpmTasks('grunt-contrib-watch');
+
 grunt.loadNpmTasks('grunt-contrib-concat');
 grunt.loadNpmTasks('grunt-contrib-uglify');
+grunt.loadNpmTasks('grunt-angular-templates');
+
 grunt.loadNpmTasks('grunt-ngdocs');
 
+grunt.loadNpmTasks('grunt-contrib-watch');
+
 // Default tasks.
-grunt.registerTask('default', ['sass', 'autoprefixer', 'concat', 'uglify', 'watch', ]);
+grunt.registerTask('default', ['sass', 'autoprefixer', 'ngtemplates', 'concat', 'uglify', 'watch', ]);
 grunt.registerTask('ngdocs', ['ngdocs', ]);
 
 };

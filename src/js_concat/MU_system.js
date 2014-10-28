@@ -1,5 +1,5 @@
 var MU_System = angular.module('MU', []);
-MU_System.factory('muMenus', [ '$rootScope', '$timeout',
+;MU_System.factory('muMenus', [ '$rootScope', '$timeout',
 	function( $rootScope, $timeout ) {
 
 
@@ -374,7 +374,7 @@ MU_System.factory('muMenus', [ '$rootScope', '$timeout',
 
 	return muSystem;
 }]);
-//	Any controller containing this service should have this line of code:
+;//	Any controller containing this service should have this line of code:
 //		$scope.$on( 'MU_windowResized', function() { $scope.$apply(); });
 
 MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',

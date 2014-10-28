@@ -1,5 +1,5 @@
 var myApp = angular.module('myApp', ['MU']);
-angular.module('myApp').run(['$templateCache', function($templateCache) {
+;angular.module('myApp').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('templates/content/center.html',
@@ -33,7 +33,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
 
 }]);
 
-myApp.controller('GameGridController', [ 'muMenus', '$scope', "$interval",
+;myApp.controller('GameGridController', [ 'muMenus', '$scope', "$interval",
 function( muMenus, $scope, $interval ){
 
 	var self = this,
@@ -54,7 +54,7 @@ function( muMenus, $scope, $interval ){
 
 
 }]);
-myApp.controller('HeroController', [ 'muContent',
+;myApp.controller('HeroController', [ 'muContent',
 function( muContent ){
 
 	var self = this;
@@ -76,7 +76,7 @@ function( muContent ){
 
 
 }]);
-myApp.controller('MUMenuLeftController', [ 'muMenus', '$scope',
+;myApp.controller('MUMenuLeftController', [ 'muMenus', '$scope',
 function( muMenus, $scope ){
 
 	var self = this;
@@ -107,7 +107,7 @@ function( muMenus, $scope ){
 
 
 }]);
-myApp.controller('MUMenuRightController', [ 'muMenus', '$scope',
+;myApp.controller('MUMenuRightController', [ 'muMenus', '$scope',
 function( muMenus, $scope ){
 
 	var self = this;
@@ -138,7 +138,7 @@ function( muMenus, $scope ){
 
 
 }]);
-myApp.controller('MUSystemController', [ 'muMenus', 'muContent', '$scope', "$interval",
+;myApp.controller('MUSystemController', [ 'muMenus', 'muContent', '$scope', "$interval",
 function( muMenus, muContent, $scope, $interval ){
 
 	var self = this;

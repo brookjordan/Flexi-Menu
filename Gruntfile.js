@@ -90,7 +90,7 @@ grunt.initConfig({
 
   concat: {
     options: {
-      //separator: '\n;',
+      separator: '\n;',
     },
 
     mu_system: {

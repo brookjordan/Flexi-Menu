@@ -78,12 +78,9 @@ grunt.initConfig({
           removeScriptTypeAttributes:     true,
           removeStyleLinkTypeAttributes:  true
         },
-
-      bootstrap: function(module, script) {
-        return "angular.module('myApp').run(['$templateCache',function($templateCache){" + script + "}]);";
-      },
     },
-    app:        {
+
+    myApp:        {
       src:      'templates/**/**.html',
       dest:     'src/js/my_app/templates.js',
     },

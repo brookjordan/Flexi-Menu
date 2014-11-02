@@ -26,33 +26,7 @@
 		</div>
 		-->
 
-		<div
-			class="MU__menu-left MU__menu-left--{{ !MU.menus.isVisible( 'left' ) && 'hidden' || MU.menus.state( 'left' ) }}"
-			ng-style="MU.leftStyle()">
-			<div class="MU__menu-left__inner">
-				<div ng-controller="MUMenuLeftController as ML">
-					<div class="MU__navIcons MU__navIcons-left">
-						<button
-							class="MU__navIcons__item"
-							ng-click="ML.toggle( $index )"
-							ng-repeat="button in ML.items"
-							ng-class="{ 'MU__navIcons-left__item--active': ML.openItem === $index }">
-							{{ $index }}
-						</button>
-					</div>
-
-					<div class="MU-you">
-						<p class="MU__mainNavItem">ONE</p>
-						<p class="MU__mainNavItem">ONE</p>
-						<p class="MU__mainNavItem">ONE</p>
-						<p class="MU__mainNavItem">ONE</p>
-						<p class="MU__mainNavItem">ONE</p>
-						<p class="MU__mainNavItem">ONE</p>
-						<p class="MU__mainNavItem">ONE</p>
-					</div>
-				</div>
-			</div>
-		</div>
+		<div left-menu ></div>
 
 		<div class="MU__center">
 			<div class="MU__center__scroll">

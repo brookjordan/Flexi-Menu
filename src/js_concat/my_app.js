@@ -3,7 +3,7 @@ var myApp = angular.module('myApp', ['MU']);
   'use strict';
 
   $templateCache.put('templates/content/center.html',
-    "<div hero-area></div><p class=widthDisplay></p><div game-grid></div><div><hr style=\"clear: both\"><span>Toggle open:</span><br><button ng-repeat=\"(title, menu) in MU.menus.menus track by title\" ng-click=\"MU.menus.toggleState( title )\">{{ title }}</button><hr><span>Toggle visiblity:</span><br><button ng-repeat=\"(title, menu) in MU.menus.menus track by title\" ng-click=\"MU.menus.toggleVisibility( title )\"><span ng-if=\"MU.menus.isVisible( title )\">Hide {{ title }}</span> <span ng-if=\"!MU.menus.isVisible( title )\">Show {{ title }}</span></button><hr><span>Prioritise:</span><br><button ng-repeat=\"(title, menu) in MU.menus.menus track by title\" ng-click=\"MU.menus.reorder( title )\">Lift {{ title }}</button><hr><span>Link:</span> <button ng-show=\"MU.menus.menus['left'] && MU.menus.menus['right']\" ng-click=\"MU.linkMenus( 'left right' )\">left and right</button> <button ng-show=\"MU.menus.menus['top'] && MU.menus.menus['bottom']\" ng-click=\"MU.linkMenus( 'top bottom' )\">top and bottom</button><br><span>Unlink:</span> <button ng-show=\"MU.menus.menus['left'] && MU.menus.menus['right']\" ng-click=\"MU.unlinkMenus( 'left right' )\">left and right</button> <button ng-show=\"MU.menus.menus['top'] && MU.menus.menus['bottom']\" ng-click=\"MU.unlinkMenus( 'top bottom' )\">top and bottom</button> <button ng-click=MU.menus.unlink()>all</button></div>"
+    "<div hero-area></div><p class=widthDisplay></p><div game-grid></div><div test-buttons></div>"
   );
 
 
@@ -29,6 +29,11 @@ var myApp = angular.module('myApp', ['MU']);
 
   $templateCache.put('templates/directives/rightMenuDirective.html',
     "<div class=\"MU__menu-right MU__menu-right--{{ !MU_right.menus.isVisible( 'right' ) && 'hidden' || MU_right.menus.state( 'right' ) }}\" ng-style=MU_right.rightStyle()><div class=MU__menu-right__inner><div class=\"MU__navIcons MU__navIcons-right\"><button class=MU__navIcons__item ng-click=\"MU_right.toggle( $index )\" ng-repeat=\"button in MU_right.items\" ng-class=\"{ 'MU__navIcons-right__item--active': MU_right.openItem === $index }\">{{ $index }}</button></div><div class=MU-me><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p></div></div></div>"
+  );
+
+
+  $templateCache.put('templates/directives/testButtonsDirective.html',
+    "<div class=testButtons><hr style=\"clear: both\"><span>Toggle open:</span><br><button ng-repeat=\"(title, menu) in testButtons.menus.menus track by title\" ng-click=\"testButtons.menus.toggleState( title )\">{{ title }}</button><hr><span>Toggle visiblity:</span><br><button ng-repeat=\"(title, menu) in testButtons.menus.menus track by title\" ng-click=\"testButtons.menus.toggleVisibility( title )\"><span ng-if=\"testButtons.menus.isVisible( title )\">Hide {{ title }}</span> <span ng-if=\"!testButtons.menus.isVisible( title )\">Show {{ title }}</span></button><hr><span>Prioritise:</span><br><button ng-repeat=\"(title, menu) in testButtons.menus.menus track by title\" ng-click=\"testButtons.menus.reorder( title )\">Lift {{ title }}</button><hr><span>Link:</span> <button ng-show=\"testButtons.menus.menus['left'] && testButtons.menus.menus['right']\" ng-click=\"testButtons.linkMenus( 'left right' )\">left and right</button> <button ng-show=\"testButtons.menus.menus['top'] && testButtons.menus.menus['bottom']\" ng-click=\"testButtons.linkMenus( 'top bottom' )\">top and bottom</button><br><span>Unlink:</span> <button ng-show=\"testButtons.menus.menus['left'] && testButtons.menus.menus['right']\" ng-click=\"testButtons.unlinkMenus( 'left right' )\">left and right</button> <button ng-show=\"testButtons.menus.menus['top'] && testButtons.menus.menus['bottom']\" ng-click=\"testButtons.unlinkMenus( 'top bottom' )\">top and bottom</button> <button ng-click=testButtons.menus.unlink()>all</button></div>"
   );
 
 
@@ -323,4 +328,26 @@ function( muMenus, $scope ){
 			}
 		}
 	});
+}]);
+;myApp
+
+.directive('testButtons', function() {
+	return {
+		controller: 'TestButtonsController',
+		controllerAs: 'testButtons',
+		bindToController: true,
+
+		replace: true,
+		templateUrl: 'templates/directives/testButtonsDirective.html'
+	};
+})
+
+.controller('TestButtonsController', [ 'muMenus',
+function( muMenus ){
+
+	var self = this,
+		i = 0;
+
+	this.menus = muMenus;
+
 }]);

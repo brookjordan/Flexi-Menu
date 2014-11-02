@@ -1,0 +1,68 @@
+<div class="testButtons">
+	<hr style="clear: both;">
+
+	<span>Toggle open:</span>
+	<br>
+	<button
+		ng-repeat="(title, menu) in testButtons.menus.menus track by title"
+		ng-click="testButtons.menus.toggleState( title )" >
+		{{ title }}
+	</button>
+
+	<hr>
+
+
+	<span>Toggle visiblity:</span>
+	<br>
+	<button
+		ng-repeat="(title, menu) in testButtons.menus.menus track by title"
+		ng-click="testButtons.menus.toggleVisibility( title )" >
+		<span ng-if="testButtons.menus.isVisible( title )">Hide {{ title }}</span>
+		<span ng-if="!testButtons.menus.isVisible( title )">Show {{ title }}</span>
+	</button>
+
+	<hr>
+
+
+	<span>Prioritise:</span>
+	<br>
+	<button
+		ng-repeat="(title, menu) in testButtons.menus.menus track by title"
+		ng-click="testButtons.menus.reorder( title )" >
+		Lift {{ title }}
+	</button>
+
+	<hr>
+
+
+	<span>Link:</span>
+	<button
+		ng-show="testButtons.menus.menus['left'] && testButtons.menus.menus['right']"
+		ng-click="testButtons.linkMenus( 'left right' )" >
+		left and right
+	</button>
+	<button
+		ng-show="testButtons.menus.menus['top'] && testButtons.menus.menus['bottom']"
+		ng-click="testButtons.linkMenus( 'top bottom' )" >
+		top and bottom
+	</button>
+
+	<br>
+
+
+	<span>Unlink:</span>
+	<button
+		ng-show="testButtons.menus.menus['left'] && testButtons.menus.menus['right']"
+		ng-click="testButtons.unlinkMenus( 'left right' )" >
+		left and right
+	</button>
+	<button
+		ng-show="testButtons.menus.menus['top'] && testButtons.menus.menus['bottom']"
+		ng-click="testButtons.unlinkMenus( 'top bottom' )" >
+		top and bottom
+	</button>
+	<button
+		ng-click="testButtons.menus.unlink()" >
+		all
+	</button>
+</div>

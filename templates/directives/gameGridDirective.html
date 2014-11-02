@@ -1,0 +1,9 @@
+<div class="gameGrid">
+	<div
+		class="gameGrid__game"
+		ng-repeat="game in gameGrid.games track by game.id">
+		<div
+			class="gameGrid__game__inner"
+			ng-style="{ 'background-color': game.bg }"></div>
+	</div>
+</div>

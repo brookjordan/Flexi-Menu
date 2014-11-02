@@ -7,7 +7,7 @@ myApp
 		bindToController: true,
 
 		replace: true,
-		templateUrl: 'templates/directives/heroAreaDirective.html'
+		templateUrl: 'templates/directives/gameGridDirective.html'
 	};
 })
 

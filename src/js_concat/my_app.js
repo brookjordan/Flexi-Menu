@@ -32,11 +32,6 @@ var myApp = angular.module('myApp', ['MU']);
   );
 
 
-  $templateCache.put('templates/menus/left.html',
-    "<div ng-controller=\"MUMenuLeftController as ML\"><div class=\"MU__navIcons MU__navIcons-left\"><button class=MU__navIcons__item ng-click=\"ML.toggle( $index )\" ng-repeat=\"button in ML.items\" ng-class=\"{ 'MU__navIcons-left__item--active': ML.openItem === $index }\">{{ $index }}</button></div><div class=MU-you><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p></div></div>"
-  );
-
-
   $templateCache.put('templates/menus/right.html',
     "<div ng-controller=\"MUMenuRightController as MR\"><div class=\"MU__navIcons MU__navIcons-right\"><button class=MU__navIcons__item ng-click=\"MR.toggle( $index )\" ng-repeat=\"button in MR.items\" ng-class=\"{ 'MU__navIcons-right__item--active': MR.openItem === $index }\">{{ $index }}</button></div><div class=MU-me><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p></div></div>"
   );

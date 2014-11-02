@@ -15,18 +15,24 @@
 		id="MU"
 		ng-style="MU.systemStyle()">
 
-		<!--
+
 		<div
-			ng-repeat="(title, menu) in MU.menus.menus track by title"
-			class="MU__menu-{{ title }} MU__menu-{{ title }}--{{ !MU.menus.isVisible( title ) && 'hidden' || MU.menus.state( title ) }}"
-			ng-style="MU.{{ title }}Style()">
+			class="MU__menu-top MU__menu-top--{{ !MU.menus.isVisible( 'top' ) && 'hidden' || MU.menus.state( 'top' ) }}"
+			ng-style="MU.topStyle()">
 			<div
-				class="MU__menu-{{ title }}__inner"
-				ng-include=" 'templates/menus/' + title + '.html' "></div>
+				class="MU__menu-top__inner"
+				ng-include=" 'templates/menus/top.html' "></div>
 		</div>
-		-->
 
 		<div left-menu ></div>
+
+		<div
+			class="MU__menu-bottom MU__menu-bottom--{{ !MU.menus.isVisible( 'bottom' ) && 'hidden' || MU.menus.state( 'bottom' ) }}"
+			ng-style="MU.bottomStyle()">
+			<div
+				class="MU__menu-bottom__inner"
+				ng-include=" 'templates/menus/bottom.html' "></div>
+		</div>
 
 		<div class="MU__center">
 			<div class="MU__center__scroll">

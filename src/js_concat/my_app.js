@@ -3,12 +3,17 @@ var myApp = angular.module('myApp', ['MU']);
   'use strict';
 
   $templateCache.put('templates/content/center.html',
-    "<div class=hero ng-controller=\"HeroController as HRO\" ng-include=\" 'templates/content/hero.html' \" ng-style=HRO.contentHeight()></div><p class=widthDisplay></p><div ng-controller=\"GameGridController as GG\" class=gameGrid><div class=gameGrid__game ng-repeat=\"game in GG.games track by game.id\"><div class=gameGrid__game__inner ng-style=\"{ 'background-color': game.bg }\"></div></div><hr style=\"clear: both\"><span>Toggle open:</span><br><button ng-repeat=\"(title, menu) in MU.menus.menus track by title\" ng-click=\"MU.menus.toggleState( title )\">{{ title }}</button><hr><span>Toggle visiblity:</span><br><button ng-repeat=\"(title, menu) in MU.menus.menus track by title\" ng-click=\"MU.menus.toggleVisibility( title )\"><span ng-if=\"MU.menus.isVisible( title )\">Hide {{ title }}</span> <span ng-if=\"!MU.menus.isVisible( title )\">Show {{ title }}</span></button><hr><span>Prioritise:</span><br><button ng-repeat=\"(title, menu) in MU.menus.menus track by title\" ng-click=\"MU.menus.reorder( title )\">Lift {{ title }}</button><hr><span>Link:</span> <button ng-show=\"MU.menus.menus['left'] && MU.menus.menus['right']\" ng-click=\"MU.linkMenus( 'left right' )\">left and right</button> <button ng-show=\"MU.menus.menus['top'] && MU.menus.menus['bottom']\" ng-click=\"MU.linkMenus( 'top bottom' )\">top and bottom</button><br><span>Unlink:</span> <button ng-show=\"MU.menus.menus['left'] && MU.menus.menus['right']\" ng-click=\"MU.unlinkMenus( 'left right' )\">left and right</button> <button ng-show=\"MU.menus.menus['top'] && MU.menus.menus['bottom']\" ng-click=\"MU.unlinkMenus( 'top bottom' )\">top and bottom</button> <button ng-click=MU.menus.unlink()>all</button></div>"
+    "<div hero-area></div><p class=widthDisplay></p><div ng-controller=\"GameGridController as GG\" class=gameGrid><div class=gameGrid__game ng-repeat=\"game in GG.games track by game.id\"><div class=gameGrid__game__inner ng-style=\"{ 'background-color': game.bg }\"></div></div><hr style=\"clear: both\"><span>Toggle open:</span><br><button ng-repeat=\"(title, menu) in MU.menus.menus track by title\" ng-click=\"MU.menus.toggleState( title )\">{{ title }}</button><hr><span>Toggle visiblity:</span><br><button ng-repeat=\"(title, menu) in MU.menus.menus track by title\" ng-click=\"MU.menus.toggleVisibility( title )\"><span ng-if=\"MU.menus.isVisible( title )\">Hide {{ title }}</span> <span ng-if=\"!MU.menus.isVisible( title )\">Show {{ title }}</span></button><hr><span>Prioritise:</span><br><button ng-repeat=\"(title, menu) in MU.menus.menus track by title\" ng-click=\"MU.menus.reorder( title )\">Lift {{ title }}</button><hr><span>Link:</span> <button ng-show=\"MU.menus.menus['left'] && MU.menus.menus['right']\" ng-click=\"MU.linkMenus( 'left right' )\">left and right</button> <button ng-show=\"MU.menus.menus['top'] && MU.menus.menus['bottom']\" ng-click=\"MU.linkMenus( 'top bottom' )\">top and bottom</button><br><span>Unlink:</span> <button ng-show=\"MU.menus.menus['left'] && MU.menus.menus['right']\" ng-click=\"MU.unlinkMenus( 'left right' )\">left and right</button> <button ng-show=\"MU.menus.menus['top'] && MU.menus.menus['bottom']\" ng-click=\"MU.unlinkMenus( 'top bottom' )\">top and bottom</button> <button ng-click=MU.menus.unlink()>all</button></div>"
   );
 
 
   $templateCache.put('templates/content/hero.html',
-    "<h1 class=hero__title>{{ HRO.title }}</h1>"
+    ""
+  );
+
+
+  $templateCache.put('templates/directives/heroAreaDirective.html',
+    "<div class=hero ng-style=hero.contentHeight()><h1 class=hero__title>{{ hero.title }}</h1></div>"
   );
 
 
@@ -33,28 +38,20 @@ var myApp = angular.module('myApp', ['MU']);
 
 }]);
 
-;myApp.controller('GameGridController', [ 'muMenus', '$scope', "$interval",
-function( muMenus, $scope, $interval ){
+;myApp
 
-	var self = this,
-		i = 0;
+.directive('heroArea', function() {
+	return {
+		controller: 'HeroController',
+		controllerAs: 'hero',
+		bindToController: true,
 
-	this.games = [];
+		replace: true,
+		templateUrl: 'templates/directives/heroAreaDirective.html'
+	};
+})
 
-	for (; i<20; i+=1) {
-		this.games.push({
-			id: i,
-			bg: 'rgb(' +
-				(110 + Math.floor(Math.random()*30)) + ',' +
-				(110 + Math.floor(Math.random()*30)) + ',' +
-				(110 + Math.floor(Math.random()*30)) +
-			')'
-		});
-	}
-
-
-}]);
-;myApp.controller('HeroController', [ 'muContent',
+.controller('HeroController', [ 'muContent',
 function( muContent ){
 
 	var self = this;
@@ -76,6 +73,28 @@ function( muContent ){
 
 
 }]);
+;myApp.controller('GameGridController', [ 'muMenus', '$scope', "$interval",
+function( muMenus, $scope, $interval ){
+
+	var self = this,
+		i = 0;
+
+	this.games = [];
+
+	for (; i<20; i+=1) {
+		this.games.push({
+			id: i,
+			bg: 'rgb(' +
+				(110 + Math.floor(Math.random()*30)) + ',' +
+				(110 + Math.floor(Math.random()*30)) + ',' +
+				(110 + Math.floor(Math.random()*30)) +
+			')'
+		});
+	}
+
+
+}]);
+;
 ;myApp.controller('MUMenuLeftController', [ 'muMenus', '$scope',
 function( muMenus, $scope ){
 

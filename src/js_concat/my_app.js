@@ -27,6 +27,11 @@ var myApp = angular.module('myApp', ['MU']);
   );
 
 
+  $templateCache.put('templates/directives/muSystemDirective.html',
+    "<div class=\"MU {{ MU.content.mediaClass }} {{ MU.getClassName() }}\" id=MU ng-style=MU.systemStyle()><div class=\"MU__menu-top MU__menu-top--{{ !MU.menus.isVisible( 'top' ) && 'hidden' || MU.menus.state( 'top' ) }}\" ng-style=MU.topStyle()><div class=MU__menu-top__inner ng-include=\" 'templates/menus/top.html' \"></div></div><div left-menu></div><div right-menu></div><div class=\"MU__menu-bottom MU__menu-bottom--{{ !MU.menus.isVisible( 'bottom' ) && 'hidden' || MU.menus.state( 'bottom' ) }}\" ng-style=MU.bottomStyle()><div class=MU__menu-bottom__inner ng-include=\" 'templates/menus/bottom.html' \"></div></div><div class=MU__center><div class=MU__center__scroll><div class=MU__center__content ng-include=\" 'templates/content/center.html' \"></div></div></div></div>"
+  );
+
+
   $templateCache.put('templates/directives/rightMenuDirective.html',
     "<div class=\"MU__menu-right MU__menu-right--{{ !MU_right.menus.isVisible( 'right' ) && 'hidden' || MU_right.menus.state( 'right' ) }}\" ng-style=MU_right.rightStyle()><div class=MU__menu-right__inner><div class=\"MU__navIcons MU__navIcons-right\"><button class=MU__navIcons__item ng-click=\"MU_right.toggle( $index )\" ng-repeat=\"button in MU_right.items\" ng-class=\"{ 'MU__navIcons-right__item--active': MU_right.openItem === $index }\">{{ $index }}</button></div><div class=MU-me><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p></div></div></div>"
   );
@@ -163,47 +168,18 @@ function( muMenus, $scope ){
 }]);
 ;myApp
 
-.directive('rightMenu', function() {
+.directive('muSystem', function() {
 	return {
-		controller: 'MUMenuRightController',
-		controllerAs: 'MU_right',
+		controller: 'MUSystemController',
+		controllerAs: 'MU',
 		bindToController: true,
 
 		replace: true,
-		templateUrl: 'templates/directives/rightMenuDirective.html'
+		templateUrl: 'templates/directives/muSystemDirective.html'
 	};
 })
 
-.controller('MUMenuRightController', [ 'muMenus', '$scope',
-function( muMenus, $scope ){
-
-	var self = this;
-
-	this.items = [0,1,2,3,4];
-	this.openItem = -1;
-	this.menus = muMenus;
-
-	this.toggle = function ( $index ) {
-		if ( self.openItem === $index ) {
-			self.openItem = -1;
-			muMenus.toggleState( 'right', 'closed' );
-		} else {
-			self.openItem = $index;
-			muMenus.toggleState( 'right', 'open' );
-		}
-	};
-
-	$scope.$on('MU_stateToggled', function( event, args ){
-		if ( args.menuID === 'right' ) {
-			if ( args.newState === 'closed' ) {
-				self.openItem = -1;
-			} else if ( self.openItem === -1 ) {
-				self.openItem = 0;
-			}
-		}
-	});
-}]);
-;myApp.controller('MUSystemController', [ 'muMenus', 'muContent', '$scope', "$interval",
+.controller('MUSystemController', [ 'muMenus', 'muContent', '$scope', "$interval",
 function( muMenus, muContent, $scope, $interval ){
 
 	var self = this;
@@ -315,4 +291,46 @@ function( muMenus, muContent, $scope, $interval ){
 		$scope.$apply();
 	});
 
+}]);
+;myApp
+
+.directive('rightMenu', function() {
+	return {
+		controller: 'MUMenuRightController',
+		controllerAs: 'MU_right',
+		bindToController: true,
+
+		replace: true,
+		templateUrl: 'templates/directives/rightMenuDirective.html'
+	};
+})
+
+.controller('MUMenuRightController', [ 'muMenus', '$scope',
+function( muMenus, $scope ){
+
+	var self = this;
+
+	this.items = [0,1,2,3,4];
+	this.openItem = -1;
+	this.menus = muMenus;
+
+	this.toggle = function ( $index ) {
+		if ( self.openItem === $index ) {
+			self.openItem = -1;
+			muMenus.toggleState( 'right', 'closed' );
+		} else {
+			self.openItem = $index;
+			muMenus.toggleState( 'right', 'open' );
+		}
+	};
+
+	$scope.$on('MU_stateToggled', function( event, args ){
+		if ( args.menuID === 'right' ) {
+			if ( args.newState === 'closed' ) {
+				self.openItem = -1;
+			} else if ( self.openItem === -1 ) {
+				self.openItem = 0;
+			}
+		}
+	});
 }]);

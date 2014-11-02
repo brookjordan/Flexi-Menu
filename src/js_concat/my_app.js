@@ -27,6 +27,11 @@ var myApp = angular.module('myApp', ['MU']);
   );
 
 
+  $templateCache.put('templates/directives/rightMenuDirective.html',
+    "<div class=\"MU__menu-right MU__menu-right--{{ !MU_right.menus.isVisible( 'right' ) && 'hidden' || MU_right.menus.state( 'right' ) }}\" ng-style=MU_right.rightStyle()><div class=MU__menu-right__inner><div class=\"MU__navIcons MU__navIcons-right\"><button class=MU__navIcons__item ng-click=\"MU_right.toggle( $index )\" ng-repeat=\"button in MU_right.items\" ng-class=\"{ 'MU__navIcons-right__item--active': MU_right.openItem === $index }\">{{ $index }}</button></div><div class=MU-me><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p></div></div></div>"
+  );
+
+
   $templateCache.put('templates/menus/bottom.html',
     "- -- --- -- - Cookies - -- --- -- - <button class=MU__menu-bottom__switch ng-click=\"MU.menus.toggleVisibility( 'bottom' )\"></button>"
   );
@@ -156,44 +161,27 @@ function( muMenus, $scope ){
 
 
 }]);
-;myApp.controller('MUMenuLeftController', [ 'muMenus', '$scope',
-function( muMenus, $scope ){
+;myApp
 
-	var self = this;
+.directive('rightMenu', function() {
+	return {
+		controller: 'MUMenuRightController',
+		controllerAs: 'MU_right',
+		bindToController: true,
 
-	this.items = [0,1];
-	this.openItem = -1;
-
-	this.toggle = function ( $index ) {
-		if ( self.openItem === $index ) {
-			self.openItem = -1;
-			muMenus.toggleState( 'left', 'closed' );
-		} else {
-			self.openItem = $index;
-			muMenus.toggleState( 'left', 'open' );
-		}
+		replace: true,
+		templateUrl: 'templates/directives/rightMenuDirective.html'
 	};
+})
 
-	$scope.$on('MU_stateToggled', function( event, args ){
-		if ( args.menuID === 'left' ) {
-			if ( args.newState === 'closed' ) {
-				self.openItem = -1;
-			} else if ( self.openItem === -1 ) {
-				self.openItem = 0;
-			}
-		}
-	});
-
-
-
-}]);
-;myApp.controller('MUMenuRightController', [ 'muMenus', '$scope',
+.controller('MUMenuRightController', [ 'muMenus', '$scope',
 function( muMenus, $scope ){
 
 	var self = this;
 
 	this.items = [0,1,2,3,4];
 	this.openItem = -1;
+	this.menus = muMenus;
 
 	this.toggle = function ( $index ) {
 		if ( self.openItem === $index ) {
@@ -214,10 +202,8 @@ function( muMenus, $scope ){
 			}
 		}
 	});
-
-
-
 }]);
+;
 ;myApp.controller('MUSystemController', [ 'muMenus', 'muContent', '$scope', "$interval",
 function( muMenus, muContent, $scope, $interval ){
 

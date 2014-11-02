@@ -351,25 +351,21 @@ MU_System.factory('muMenus', [ '$rootScope', '$timeout',
 
 
 
+	muSystem.add              =   addMenu;
+	muSystem.link             =   linkMenus;
+	muSystem.unlink           =   unlinkMenus;
+	muSystem.reorder          =   reorderMenus;
 
+	muSystem.toggleState      =   toggleState;
+	muSystem.toggleVisibility =   toggleVisibility;
 
+	muSystem.setOrder         =   setOrder;
 
-
-	muSystem.add = addMenu;
-	muSystem.link = linkMenus;
-	muSystem.unlink = unlinkMenus;
-	muSystem.reorder = reorderMenus;
-
-	muSystem.toggleState = toggleState;
-	muSystem.toggleVisibility = toggleVisibility;
-
-	muSystem.setOrder = setOrder;
-
-	muSystem.isVisible = isVisible;
-	muSystem.is = isOfState;
-	muSystem.state = stateOf;
-	muSystem.menus = menus.items;
-	muSystem.menusBase = menus;
+	muSystem.isVisible        =   isVisible;
+	muSystem.is               =   isOfState;
+	muSystem.state            =   stateOf;
+	muSystem.menus            =   menus.items;
+	muSystem.menusBase        =   menus;
 
 	return muSystem;
 }]);

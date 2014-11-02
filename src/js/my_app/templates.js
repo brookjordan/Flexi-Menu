@@ -6,11 +6,6 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
   );
 
 
-  $templateCache.put('templates/content/hero.html',
-    ""
-  );
-
-
   $templateCache.put('templates/directives/gameGridDirective.html',
     "<div class=gameGrid><div class=gameGrid__game ng-repeat=\"game in gameGrid.games track by game.id\"><div class=gameGrid__game__inner ng-style=\"{ 'background-color': game.bg }\"></div></div></div>"
   );
@@ -38,11 +33,6 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('templates/menus/bottom.html',
     "- -- --- -- - Cookies - -- --- -- - <button class=MU__menu-bottom__switch ng-click=\"MU.menus.toggleVisibility( 'bottom' )\"></button>"
-  );
-
-
-  $templateCache.put('templates/menus/right.html',
-    "<div ng-controller=\"MUMenuRightController as MR\"><div class=\"MU__navIcons MU__navIcons-right\"><button class=MU__navIcons__item ng-click=\"MR.toggle( $index )\" ng-repeat=\"button in MR.items\" ng-class=\"{ 'MU__navIcons-right__item--active': MR.openItem === $index }\">{{ $index }}</button></div><div class=MU-me><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p></div></div>"
   );
 
 

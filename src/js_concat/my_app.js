@@ -7,11 +7,6 @@ var myApp = angular.module('myApp', ['MU']);
   );
 
 
-  $templateCache.put('templates/content/hero.html',
-    ""
-  );
-
-
   $templateCache.put('templates/directives/gameGridDirective.html',
     "<div class=gameGrid><div class=gameGrid__game ng-repeat=\"game in gameGrid.games track by game.id\"><div class=gameGrid__game__inner ng-style=\"{ 'background-color': game.bg }\"></div></div></div>"
   );

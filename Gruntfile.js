@@ -94,12 +94,12 @@ grunt.initConfig({
     },
 
     mu_system: {
-      src: [ 'src/js/MU_system/app.js', 'src/js/MU_system/services/muMain.js', 'src/js/MU_system/services/muContent.js', 'src/js/MU_system/directives/*.js', 'src/js/MU_system/controllers/*.js', ],
+      src: [ 'src/js/MU_system/app.js', 'src/js/MU_system/services/muMain.js', 'src/js/MU_system/services/muContent.js', 'src/js/MU_system/directives/*.js', ],
       dest: 'src/js_concat/MU_system.js',
     },
 
     my_app: {
-      src: [ 'src/js/my_app/app.js', 'src/js/my_app/templates.js', 'src/js/my_app/services/*.js', 'src/js/my_app/directives/*.js', 'src/js/my_app/controllers/*.js', ],
+      src: [ 'src/js/my_app/app.js', 'src/js/my_app/templates.js', 'src/js/my_app/services/*.js', 'src/js/my_app/directives/*.js', ],
       dest: 'src/js_concat/my_app.js',
     },
   },

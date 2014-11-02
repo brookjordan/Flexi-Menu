@@ -112,7 +112,6 @@ function( muContent ){
 
 
 }]);
-;
 ;myApp.controller('MUMenuLeftController', [ 'muMenus', '$scope',
 function( muMenus, $scope ){
 

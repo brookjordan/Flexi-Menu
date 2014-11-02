@@ -8,6 +8,24 @@ grunt.initConfig({
 
 
 
+  ngdocs: {
+    all: [ 'src/js/**/*.js', ],
+  },
+
+
+
+  copy: {
+    angular: {
+      expand: true,
+      flatten: true,
+      cwd: 'src/js_ready/',
+      src: '**',
+      dest: 'js/',
+    },
+  },
+
+
+
   sass: {
     dist: {
       options: {
@@ -17,7 +35,7 @@ grunt.initConfig({
         sourcemap: 'inline',
       },
       files: {
-        'src/css_standards/base.css': 'src/scss/base.scss',
+        'temp/css/standards/base.css': 'src/scss/base.scss',
       },
     },
   },
@@ -27,30 +45,20 @@ grunt.initConfig({
   autoprefixer: {
 
     options: {
+      browsers: [ 'last 10 versions', 'ie 8', 'ie 9', ],
+      map: true,
+
       cascade: debug_mode ?
         true :
         false,
-      browsers: [ 'last 10 versions', 'ie 8', 'ie 9', ],
-
-      map: {
-        inline: true,
-        sourceContent: true,
-        annotation: true,
-      },
     },
 
     single_file: {
       options: {},
 
-      src: 'src/css_standards/base.css',
+      src: 'temp/css/standards/base.css',
       dest: 'css/base.css',
     },
-  },
-
-
-
-  ngdocs: {
-    all: [ 'src/js/**/*.js', ],
   },
 
 
@@ -82,7 +90,7 @@ grunt.initConfig({
 
     myApp:        {
       src:      'templates/**/**.html',
-      dest:     'src/js/my_app/templates.js',
+      dest:     'temp/js/my_app/templates.js',
     },
   },
 
@@ -95,12 +103,12 @@ grunt.initConfig({
 
     mu_system: {
       src: [ 'src/js/MU_system/app.js', 'src/js/MU_system/services/muMain.js', 'src/js/MU_system/services/muContent.js', 'src/js/MU_system/directives/*.js', ],
-      dest: 'src/js_concat/MU_system.js',
+      dest: 'temp/js/concat/MU_system.js',
     },
 
     my_app: {
-      src: [ 'src/js/my_app/app.js', 'src/js/my_app/templates.js', 'src/js/my_app/services/*.js', 'src/js/my_app/directives/*.js', ],
-      dest: 'src/js_concat/my_app.js',
+      src: [ 'src/js/my_app/app.js', 'temp/js/my_app/templates.js', 'src/js/my_app/services/*.js', 'src/js/my_app/directives/*.js', ],
+      dest: 'temp/js/concat/my_app.js',
     },
   },
 
@@ -121,7 +129,7 @@ grunt.initConfig({
         beautify: debug_mode ? true : false,
       },
       files: {
-        'js/all.min.js': [ 'src/js_concat/MU_system.js', 'src/js_concat/my_app.js', ],
+        'js/all.min.js': [ 'temp/js/concat/MU_system.js', 'temp/js/concat/my_app.js', ],
       },
     },
   },
@@ -178,20 +186,21 @@ grunt.initConfig({
 
 
 
+grunt.loadNpmTasks('grunt-ngdocs');
+
+grunt.loadNpmTasks('grunt-contrib-copy');
 
 grunt.loadNpmTasks('grunt-contrib-sass');
 grunt.loadNpmTasks('grunt-autoprefixer');
 
+grunt.loadNpmTasks('grunt-angular-templates');
 grunt.loadNpmTasks('grunt-contrib-concat');
 grunt.loadNpmTasks('grunt-contrib-uglify');
-grunt.loadNpmTasks('grunt-angular-templates');
-
-grunt.loadNpmTasks('grunt-ngdocs');
 
 grunt.loadNpmTasks('grunt-contrib-watch');
 
 // Default tasks.
-grunt.registerTask('default', ['sass', 'autoprefixer', 'ngtemplates', 'concat', 'uglify', 'watch', ]);
+grunt.registerTask('default', ['copy', 'sass', 'autoprefixer', 'ngtemplates', 'concat', 'uglify', 'watch', ]);
 grunt.registerTask('ngdocs', ['ngdocs', ]);
 
 };

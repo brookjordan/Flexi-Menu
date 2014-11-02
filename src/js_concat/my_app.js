@@ -128,7 +128,6 @@ function( muMenus, $scope, $interval ){
 
 
 }]);
-;
 ;myApp.controller('MUMenuLeftController', [ 'muMenus', '$scope',
 function( muMenus, $scope ){
 

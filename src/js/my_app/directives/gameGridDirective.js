@@ -1,4 +1,17 @@
-myApp.controller('GameGridController', [ 'muMenus', '$scope', "$interval",
+myApp
+
+.directive('gameGrid', function() {
+	return {
+		controller: 'GameGridController',
+		controllerAs: 'gameGrid',
+		bindToController: true,
+
+		replace: true,
+		templateUrl: 'templates/directives/gameGridDirective.html'
+	};
+})
+
+.controller('GameGridController', [ 'muMenus', '$scope', "$interval",
 function( muMenus, $scope, $interval ){
 
 	var self = this,

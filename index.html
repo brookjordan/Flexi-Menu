@@ -7,33 +7,8 @@
 
 	<link rel="stylesheet" href="css/base.css">
 </head>
-<body ng-cloak>
-	<div
-		ng-cloak
-		ng-controller="MUSystemController as MU"
-		class="MU {{ MU.content.mediaClass }} {{ MU.getClassName() }}"
-		id="MU"
-		ng-style="MU.systemStyle()">
-
-		<div
-			ng-repeat="(title, menu) in MU.menus.menus track by title"
-			class="MU__menu-{{ title }} MU__menu-{{ title }}--{{ !MU.menus.isVisible( title ) && 'hidden' || MU.menus.state( title ) }}"
-			ng-style="MU.{{ title }}Style()">
-			<div
-				class="MU__menu-{{ title }}__inner"
-				ng-include=" 'templates/menus/' + title + '.html' "></div>
-		</div>
-
-		<div class="MU__center">
-			<div class="MU__center__scroll">
-				<div class="MU__center__content" ng-include=" 'templates/content/center.html' "></div>
-			</div>
-		</div>
-	</div>
-
-
-
-
+<body>
+	<div mu-system ></div>
 
 	<script src="js/angular.min.js"></script>
 	<script src="js/all.min.js"></script>

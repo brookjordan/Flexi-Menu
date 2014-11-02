@@ -1,4 +1,17 @@
-myApp.controller('MUMenuLeftController', [ 'muMenus', '$scope',
+myApp
+
+.directive('leftMenu', function() {
+	return {
+		controller: 'MUMenuLeftController',
+		controllerAs: 'MU_left',
+		bindToController: true,
+
+		replace: true,
+		templateUrl: 'templates/directives/leftMenuDirective.html'
+	};
+})
+
+.controller('MUMenuLeftController', [ 'muMenus', '$scope',
 function( muMenus, $scope ){
 
 	var self = this;

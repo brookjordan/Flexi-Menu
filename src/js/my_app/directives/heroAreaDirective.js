@@ -1,4 +1,17 @@
-myApp.controller('HeroController', [ 'muContent',
+myApp
+
+.directive('heroArea', function() {
+	return {
+		controller: 'HeroController',
+		controllerAs: 'hero',
+		bindToController: true,
+
+		replace: true,
+		templateUrl: 'templates/directives/heroAreaDirective.html'
+	};
+})
+
+.controller('HeroController', [ 'muContent',
 function( muContent ){
 
 	var self = this;

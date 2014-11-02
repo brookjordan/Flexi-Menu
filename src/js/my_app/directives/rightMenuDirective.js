@@ -1,10 +1,24 @@
-myApp.controller('MUMenuRightController', [ 'muMenus', '$scope',
+myApp
+
+.directive('rightMenu', function() {
+	return {
+		controller: 'MUMenuRightController',
+		controllerAs: 'MU_right',
+		bindToController: true,
+
+		replace: true,
+		templateUrl: 'templates/directives/rightMenuDirective.html'
+	};
+})
+
+.controller('MUMenuRightController', [ 'muMenus', '$scope',
 function( muMenus, $scope ){
 
 	var self = this;
 
 	this.items = [0,1,2,3,4];
 	this.openItem = -1;
+	this.menus = muMenus;
 
 	this.toggle = function ( $index ) {
 		if ( self.openItem === $index ) {
@@ -25,7 +39,4 @@ function( muMenus, $scope ){
 			}
 		}
 	});
-
-
-
 }]);

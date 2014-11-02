@@ -1,4 +1,17 @@
-myApp.controller('MUSystemController', [ 'muMenus', 'muContent', '$scope', "$interval",
+myApp
+
+.directive('muSystem', function() {
+	return {
+		controller: 'MUSystemController',
+		controllerAs: 'MU',
+		bindToController: true,
+
+		replace: true,
+		templateUrl: 'templates/directives/muSystemDirective.html'
+	};
+})
+
+.controller('MUSystemController', [ 'muMenus', 'muContent', '$scope', "$interval",
 function( muMenus, muContent, $scope, $interval ){
 
 	var self = this;

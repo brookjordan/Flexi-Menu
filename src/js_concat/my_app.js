@@ -203,7 +203,6 @@ function( muMenus, $scope ){
 		}
 	});
 }]);
-;
 ;myApp.controller('MUSystemController', [ 'muMenus', 'muContent', '$scope', "$interval",
 function( muMenus, muContent, $scope, $interval ){
 

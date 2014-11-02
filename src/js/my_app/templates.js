@@ -21,6 +21,11 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('templates/directives/leftMenuDirective.html',
+    ""
+  );
+
+
   $templateCache.put('templates/menus/bottom.html',
     "- -- --- -- - Cookies - -- --- -- - <button class=MU__menu-bottom__switch ng-click=\"MU.menus.toggleVisibility( 'bottom' )\"></button>"
   );

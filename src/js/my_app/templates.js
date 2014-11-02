@@ -26,6 +26,11 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('templates/directives/muSystemDirective.html',
+    "<div class=\"MU {{ MU.content.mediaClass }} {{ MU.getClassName() }}\" id=MU ng-style=MU.systemStyle()><div class=\"MU__menu-top MU__menu-top--{{ !MU.menus.isVisible( 'top' ) && 'hidden' || MU.menus.state( 'top' ) }}\" ng-style=MU.topStyle()><div class=MU__menu-top__inner ng-include=\" 'templates/menus/top.html' \"></div></div><div left-menu></div><div right-menu></div><div class=\"MU__menu-bottom MU__menu-bottom--{{ !MU.menus.isVisible( 'bottom' ) && 'hidden' || MU.menus.state( 'bottom' ) }}\" ng-style=MU.bottomStyle()><div class=MU__menu-bottom__inner ng-include=\" 'templates/menus/bottom.html' \"></div></div><div class=MU__center><div class=MU__center__scroll><div class=MU__center__content ng-include=\" 'templates/content/center.html' \"></div></div></div></div>"
+  );
+
+
   $templateCache.put('templates/directives/rightMenuDirective.html',
     "<div class=\"MU__menu-right MU__menu-right--{{ !MU_right.menus.isVisible( 'right' ) && 'hidden' || MU_right.menus.state( 'right' ) }}\" ng-style=MU_right.rightStyle()><div class=MU__menu-right__inner><div class=\"MU__navIcons MU__navIcons-right\"><button class=MU__navIcons__item ng-click=\"MU_right.toggle( $index )\" ng-repeat=\"button in MU_right.items\" ng-class=\"{ 'MU__navIcons-right__item--active': MU_right.openItem === $index }\">{{ $index }}</button></div><div class=MU-me><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p></div></div></div>"
   );

@@ -22,13 +22,13 @@ var myApp = angular.module('myApp', ['MU']);
   );
 
 
-  $templateCache.put('templates/menus/bottom.html',
-    "- -- --- -- - Cookies - -- --- -- - <button class=MU__menu-bottom__switch ng-click=\"MU.menus.toggleVisibility( 'bottom' )\"></button>"
+  $templateCache.put('templates/directives/leftMenuDirective.html',
+    "<div class=\"MU__menu-left MU__menu-left--{{ !MU_left.menus.isVisible( 'left' ) && 'hidden' || MU_left.menus.state( 'left' ) }}\" ng-style=MU_left.leftStyle()><div class=MU__menu-left__inner><div class=\"MU__navIcons MU__navIcons-left\"><button class=MU__navIcons__item ng-click=\"MU_left.toggle( $index )\" ng-repeat=\"button in MU_left.items\" ng-class=\"{ 'MU__navIcons-left__item--active': MU_left.openItem === $index }\">{{ $index }}</button></div><div class=MU-you><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p></div></div></div>"
   );
 
 
-  $templateCache.put('templates/menus/left.html',
-    "<div ng-controller=\"MUMenuLeftController as ML\"><div class=\"MU__navIcons MU__navIcons-left\"><button class=MU__navIcons__item ng-click=\"ML.toggle( $index )\" ng-repeat=\"button in ML.items\" ng-class=\"{ 'MU__navIcons-left__item--active': ML.openItem === $index }\">{{ $index }}</button></div><div class=MU-you><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p><p class=MU__mainNavItem>ONE</p></div></div>"
+  $templateCache.put('templates/menus/bottom.html',
+    "- -- --- -- - Cookies - -- --- -- - <button class=MU__menu-bottom__switch ng-click=\"MU.menus.toggleVisibility( 'bottom' )\"></button>"
   );
 
 
@@ -109,6 +109,50 @@ function( muContent ){
 	this.contentHeight = getHeroHeight;
 
 	this.title = 'Hero Title';
+
+
+}]);
+;myApp
+
+.directive('leftMenu', function() {
+	return {
+		controller: 'MUMenuLeftController',
+		controllerAs: 'MU_left',
+		bindToController: true,
+
+		replace: true,
+		templateUrl: 'templates/directives/leftMenuDirective.html'
+	};
+})
+
+.controller('MUMenuLeftController', [ 'muMenus', '$scope',
+function( muMenus, $scope ){
+
+	var self = this;
+
+	this.items = [0,1];
+	this.openItem = -1;
+
+	this.toggle = function ( $index ) {
+		if ( self.openItem === $index ) {
+			self.openItem = -1;
+			muMenus.toggleState( 'left', 'closed' );
+		} else {
+			self.openItem = $index;
+			muMenus.toggleState( 'left', 'open' );
+		}
+	};
+
+	$scope.$on('MU_stateToggled', function( event, args ){
+		if ( args.menuID === 'left' ) {
+			if ( args.newState === 'closed' ) {
+				self.openItem = -1;
+			} else if ( self.openItem === -1 ) {
+				self.openItem = 0;
+			}
+		}
+	});
+
 
 
 }]);

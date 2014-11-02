@@ -15,6 +15,7 @@
 		id="MU"
 		ng-style="MU.systemStyle()">
 
+		<!--
 		<div
 			ng-repeat="(title, menu) in MU.menus.menus track by title"
 			class="MU__menu-{{ title }} MU__menu-{{ title }}--{{ !MU.menus.isVisible( title ) && 'hidden' || MU.menus.state( title ) }}"
@@ -22,6 +23,15 @@
 			<div
 				class="MU__menu-{{ title }}__inner"
 				ng-include=" 'templates/menus/' + title + '.html' "></div>
+		</div>
+		-->
+
+		<div
+			class="MU__menu-left MU__menu-left--{{ !MU.menus.isVisible( 'left' ) && 'hidden' || MU.menus.state( 'left' ) }}"
+			ng-style="MU.leftStyle()">
+			<div
+				class="MU__menu-left__inner"
+				ng-include=" 'templates/menus/left.html' "></div>
 		</div>
 
 		<div class="MU__center">

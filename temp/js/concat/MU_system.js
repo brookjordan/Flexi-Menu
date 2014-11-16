@@ -431,22 +431,36 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 	 *	Element queries
 	 */
 	function resizeHandler () {
-		var timeNow = +new Date(),
-			oldContainerClass;
+		var resizeIntervalLimit = 333,
+			timeNow = +new Date();
 
-		if ( timeNow - lastResize > 300 ){
-			oldContainerClass = muContent.mediaClass;
-			findContentSize();
+
+		if ( timeNow - lastResize > resizeIntervalLimit ){
+
+			runResize();
+
+		} else {
 
 			if ( delayBroadcastResize ) {
 				$timeout.cancel(delayBroadcastResize);
 			}
 			delayBroadcastResize = $timeout(function() {
-				resizeHandler();
-				$rootScope.$broadcast( 'MU_windowResized' );
+				runResize();
 				delayBroadcastResize = false;
-			}, 300);
+			}, resizeIntervalLimit - (timeNow - lastResize));
+
 		}
+	}
+	function runResize () {
+		var oldContainerClass;
+
+		oldContainerClass = muContent.mediaClass;
+		findContentSize();
+		setContextQueryString();
+		$rootScope.$broadcast( 'MU_windowResized' );
+
+
+		lastResize = +new Date();
 	}
 
 	function findContentSize () {
@@ -472,15 +486,18 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 		muContent.containerHeight = containerHeight;
 		muContent.contentHeight = contentHeight;
 
-		setContextQueryString();
-
 		return contentWidth;
 	}
 
-	function addQuery ( type ) {
+	function addQuery ( options ) {
 		var i = 1, j,
 			args = arguments, arg,
-			queries, query;
+			queries, query,
+			o = options || {},
+			type = typeof o === 'string' ?
+				o :
+				o.type,
+			callback = o.callback || undefined;
 
 		for (; i<args.length; i+=1 ) {
 			arg = args[i];
@@ -497,7 +514,14 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 			}
 
 			for ( j=0; j<queries.length; j+=1 ) {
-				contextQueries[ type ].push( +queries[j] );
+				query = queries[j];
+
+				contextQueries[ type ].push( +query );
+
+				queryCallbacks[ query ] = queryCallbacks[ query ] || [];
+				if ( callback ) {
+					queryCallbacks[ query ].push( callback );
+				}
 			}
 		}
 
@@ -516,14 +540,30 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 		for (; i < contextQueries.w.length; i+=1 ) {
 			query = contextQueries.w[i];
 
-			if ( query <= muContent.contentWidth ) {
-				greaterThan += ' media__min-width__' + query;
-			} else {
+			greaterThan += ' media__min-width__' + query;
+
+			if ( query > muContent.contentWidth ) {
 				break;
 			}
 		}
 
+		runQueryCallbacks( query );
+
 		muContent.mediaClass = greaterThan;
+	}
+
+	function runQueryCallbacks ( querySize ) {
+		var i = 0,
+			callbacks = queryCallbacks[ querySize ],
+			callback;
+
+		if ( callbacks ) {
+			for (; i<callbacks.length; i+=1 ) {
+				callback = callbacks[i];
+
+				callback( querySize );
+			}
+		}
 	}
 
 
@@ -543,6 +583,7 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 			w: [],
 			h: []
 		},
+		queryCallbacks = {},
 		delayBroadcastResize = false,
 		lastResize = +new Date();
 

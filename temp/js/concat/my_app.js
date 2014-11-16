@@ -251,7 +251,12 @@ function( muMenus, muContent, $scope, $interval ){
 		})
 		.link( 'left right', 'one open' );
 
-	muContent.addQuery( 'w', '100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700' );
+	muContent.addQuery( {
+		type: 'w',
+		callback: function( querySize ){
+			//	Do nothing yet
+		}
+	}, '100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700' );
 
 
 

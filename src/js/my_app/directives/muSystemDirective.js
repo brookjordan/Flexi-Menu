@@ -13,14 +13,36 @@ myApp
 
 .controller('MUSystemController', [ 'muMenus', 'muContent', '$scope', "$interval",
 function( muMenus, muContent, $scope, $interval ){
-
 	var self = this;
 
 	function capitalise ( string ) {
 		return string.substr(0,1).toUpperCase() + string.substr(1);
 	}
 
-	this.getClassName = function () {
+	function callback ( querySize ) {
+		switch ( querySize ) {
+			case 100:
+			case 200:
+			case 300:
+			case 400:
+			case 500:
+			case 600:
+			case 700:
+				muMenus
+					.unlink()
+					.link('left right', 'one open');
+
+				break;
+			default:
+				muMenus
+					.unlink();
+				break;
+		}
+	}
+
+
+
+	self.getClassName = function () {
 		var className = "",
 			i, j, menu, menu2;
 
@@ -53,11 +75,11 @@ function( muMenus, muContent, $scope, $interval ){
 
 
 	//	Creating flexible link and unlink functions
-	this.linkMenus = function (which) {
+	self.linkMenus = function (which) {
 		muMenus.link( which, prompt() );
 	};
 
-	this.unlinkMenus = function (which) {
+	self.unlinkMenus = function (which) {
 		muMenus.unlink( which, prompt() );
 	};
 
@@ -88,33 +110,33 @@ function( muMenus, muContent, $scope, $interval ){
 		})
 		.link( 'left right', 'one open' );
 
-	muContent.addQuery( {
-		type: 'w',
-		callback: function( querySize ){
-			//	Do nothing yet
-		}
-	}, '100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700' );
+	muContent
+		.addQuery( {
+			type: 'w',
+			context: 'content',
+			callback: callback
+		}, '100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700' );
 
 
 
 	//	Setting menus to be in HTML
-	this.menus = muMenus;
-	this.content = muContent;
+	self.menus = muMenus;
+	self.content = muContent;
 
-	this.leftIcons = '0 1 2 3 4'.split(' ');
-	this.rightIcons = '0 1 2 3'.split(' ');
+	self.leftIcons = '0 1 2 3 4'.split(' ');
+	self.rightIcons = '0 1 2 3'.split(' ');
 
-	this.leftOpen = -1;
-	this.rightOpen = -1;
+	self.leftOpen = -1;
+	self.rightOpen = -1;
 
-	this.selectLeft = function ( $index ) {
+	self.selectLeft = function ( $index ) {
 		if (self.leftOpen !== $index) {
 			self.leftOpen = $index;
 		} else {
 			self.leftOpen = -1;
 		}
 	};
-	this.selectRight = function ( $index ) {
+	self.selectRight = function ( $index ) {
 		if (self.rightOpen !== $index) {
 			self.rightOpen = $index;
 		} else {

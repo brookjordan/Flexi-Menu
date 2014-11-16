@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
 
-var debug_mode = false;
+var debug_mode = true;
 
 // Project configuration.
 grunt.initConfig({
@@ -98,7 +98,9 @@ grunt.initConfig({
 
   concat: {
     options: {
-      separator: '\n;',
+      separator: ';\n',
+      sourceMap: true,
+      sourceMapStyle: 'embed',
     },
 
     mu_system: {

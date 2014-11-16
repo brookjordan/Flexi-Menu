@@ -224,7 +224,7 @@ MU_System.factory('muMenus', [ '$rootScope', '$timeout',
 
 		if ( !which ) {
 			links = [];
-			return muSystem();
+			return muSystem;
 		} else if ( typeof which === 'string' ) {
 			menuIDs = which.split(' ');
 		} else {

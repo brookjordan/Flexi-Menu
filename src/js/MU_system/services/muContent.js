@@ -80,11 +80,9 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 		}
 	}
 	function runResize () {
-		var oldContainerClass;
-
-		oldContainerClass = muContent.mediaClass;
 		findContentSize();
-		setContextQueryString();
+		setContentQueryString();
+		setContainerQueryString();
 		$rootScope.$broadcast( 'MU_windowResized' );
 
 
@@ -154,30 +152,53 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 		}
 
 		contextQueries[ type ].sort(sortNumber);
-		setContextQueryString();
+		setContentQueryString();
+		setContainerQueryString();
 
 		$rootScope.$broadcast( 'MU_windowResized' );
 
 		return muContent;
 	}
 
-	function setContextQueryString () {
+	function setContentQueryString () {
 		var greaterThan = '',
-			i = 0, query;
+			i = 0,
+			query, prevQuery;
 
 		for (; i < contextQueries.w.length; i+=1 ) {
 			query = contextQueries.w[i];
 
-			greaterThan += ' media__min-width__' + query;
-
 			if ( query > muContent.contentWidth ) {
 				break;
+			} else {
+				greaterThan += ' media__min-width__' + query;
 			}
 		}
 
-		runQueryCallbacks( query );
+		muContent.contentClass = greaterThan;
+	}
 
-		muContent.mediaClass = greaterThan;
+	function setContainerQueryString () {
+		var greaterThan = '',
+			i = 0,
+			query, prevQuery;
+
+		for (; i < contextQueries.w.length; i+=1 ) {
+			prevQuery = query;
+			query = contextQueries.w[i];
+
+			if ( query > muContent.containerWidth ) {
+				break;
+			} else {
+				greaterThan += ' media__min-width__' + query;
+			}
+		}
+
+		muContent.containerlass = greaterThan;
+
+		if ( prevQuery ) {
+			runQueryCallbacks( prevQuery );
+		}
 	}
 
 	function runQueryCallbacks ( querySize ) {
@@ -239,7 +260,8 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 	muContent.metrics = function () {
 		return systemMetrics;
 	};
-	muContent.mediaClass = '';
+	muContent.contentClass = '';
+	muContent.containerlass = '';
 
 	muContent.containerWidth = 0;
 	muContent.contentWidth = 0;

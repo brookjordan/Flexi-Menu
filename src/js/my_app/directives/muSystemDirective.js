@@ -21,12 +21,6 @@ function( muMenus, muContent, $scope, $interval ){
 
 	function callback ( querySize ) {
 		switch ( querySize ) {
-			case 100:
-			case 200:
-			case 300:
-			case 400:
-			case 500:
-			case 600:
 			case 700:
 				muMenus
 					.unlink()
@@ -112,10 +106,16 @@ function( muMenus, muContent, $scope, $interval ){
 
 	muContent
 		.addQuery( {
-			type: 'w',
-			context: 'content',
-			callback: callback
+			dir: 'w',
+			context: 'content'
 		}, '100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700' );
+
+	muContent
+		.addQuery( {
+			dir: 'w',
+			context: 'container',
+			callback: callback
+		}, '700 800' );
 
 
 

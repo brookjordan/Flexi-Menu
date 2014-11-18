@@ -59,7 +59,7 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 	 *	Element queries
 	 */
 	function resizeHandler () {
-		var resizeIntervalLimit = 333,
+		var resizeIntervalLimit = 16,
 			timeNow = +new Date();
 
 
@@ -81,8 +81,7 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 	}
 	function runResize () {
 		findContentSize();
-		setContentQueryString();
-		setContainerQueryString();
+		setQueryStrings();
 		$rootScope.$broadcast( 'MU_windowResized' );
 
 
@@ -116,14 +115,17 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 	}
 
 	function addQuery ( options ) {
-		var i = 1, j,
-			args = arguments, arg,
-			queries, query,
-			o = options || {},
-			type = typeof o === 'string' ?
+		var i = 1, j;
+		var	args = arguments;
+		var	arg;
+		var	queries, query;
+		var	o = options || {};
+		var	dir = typeof o === 'string' ?
 				o :
-				o.type,
-			callback = o.callback || undefined;
+				o.dir || 'w';
+		var	context = o.context || 'content';
+		var	callback = o.callback || undefined;
+
 
 		for (; i<args.length; i+=1 ) {
 			arg = args[i];
@@ -142,22 +144,37 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 			for ( j=0; j<queries.length; j+=1 ) {
 				query = queries[j];
 
-				contextQueries[ type ].push( +query );
+				if ( context === 'content' ) {
 
-				queryCallbacks[ query ] = queryCallbacks[ query ] || [];
-				if ( callback ) {
-					queryCallbacks[ query ].push( callback );
+					contentQueries[ dir ].push( +query );
+
+				} else if ( context === 'container' ) {
+					containerQueryCallbacks[ query ] = containerQueryCallbacks[ query ] || [];
+					if ( callback ) {
+						containerQueryCallbacks[ query ].push( callback );
+					}
+					containerQueries[ dir ].push( +query );
 				}
 			}
 		}
 
-		contextQueries[ type ].sort(sortNumber);
-		setContentQueryString();
-		setContainerQueryString();
+		//	Sort the relevant queries array
+		if ( context === 'content' ) {
+			contentQueries[ dir ].sort(sortNumber);
+		} else if ( context === 'content' ) {
+			containerQueries[ dir ].sort(sortNumber);
+		}
+
+		setQueryStrings();
 
 		$rootScope.$broadcast( 'MU_windowResized' );
 
 		return muContent;
+	}
+
+	function setQueryStrings () {
+		setContentQueryString();
+		setContainerQueryString();
 	}
 
 	function setContentQueryString () {
@@ -165,13 +182,13 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 			i = 0,
 			query, prevQuery;
 
-		for (; i < contextQueries.w.length; i+=1 ) {
-			query = contextQueries.w[i];
+		for (; i < contentQueries.w.length; i+=1 ) {
+			query = contentQueries.w[i];
 
 			if ( query > muContent.contentWidth ) {
 				break;
 			} else {
-				greaterThan += ' media__min-width__' + query;
+				greaterThan += ' content-minWidth' + query;
 			}
 		}
 
@@ -183,27 +200,43 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 			i = 0,
 			query, prevQuery;
 
-		for (; i < contextQueries.w.length; i+=1 ) {
-			prevQuery = query;
-			query = contextQueries.w[i];
+
+		for (; i < containerQueries.w.length; i+=1 ) {
+			query = containerQueries.w[i];
 
 			if ( query > muContent.containerWidth ) {
 				break;
 			} else {
-				greaterThan += ' media__min-width__' + query;
+				greaterThan += ' container-minWidth' + query;
 			}
+
+			prevQuery = query;
 		}
 
-		muContent.containerlass = greaterThan;
+		muContent.containerClass = greaterThan;
 
 		if ( prevQuery ) {
-			runQueryCallbacks( prevQuery );
+			runContainerQueryCallbacks( prevQuery );
 		}
 	}
 
-	function runQueryCallbacks ( querySize ) {
+	function runContainerQueryCallbacks ( querySize ) {
 		var i = 0,
-			callbacks = queryCallbacks[ querySize ],
+			callbacks = containerQueryCallbacks[ querySize ],
+			callback;
+
+		if ( callbacks ) {
+			for (; i<callbacks.length; i+=1 ) {
+				callback = callbacks[i];
+
+				callback( querySize );
+			}
+		}
+	}
+
+	function runContentQueryCallbacks ( querySize ) {
+		var i = 0,
+			callbacks = contentQueryCallbacks[ querySize ],
 			callback;
 
 		if ( callbacks ) {
@@ -226,15 +259,19 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 
 	function muContent () {}
 
-	var systemMetrics = {},
-		menus = muMenus.menusBase,
-		contextQueries = {
+	var systemMetrics = {};
+	var	menus = muMenus.menusBase;
+	var	contentQueries = {
 			w: [],
 			h: []
-		},
-		queryCallbacks = {},
-		delayBroadcastResize = false,
-		lastResize = +new Date();
+		};
+	var	containerQueries = {
+			w: [],
+			h: []
+		};
+	var	containerQueryCallbacks = {};
+	var	delayBroadcastResize = false;
+	var	lastResize = +new Date();
 
 
 
@@ -261,7 +298,7 @@ MU_System.factory('muContent', [ '$window', '$rootScope', '$timeout', 'muMenus',
 		return systemMetrics;
 	};
 	muContent.contentClass = '';
-	muContent.containerlass = '';
+	muContent.containerClass = '';
 
 	muContent.containerWidth = 0;
 	muContent.contentWidth = 0;

@@ -52,7 +52,7 @@ angular.module('myApp').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('templates/directives/muSystemDirective.html',
-    "<div class=\"MU {{ MU.content.contentClass }} {{ MU.getClassName() }}\" id=\"MU\" ng-style=\"MU.systemStyle()\">\n" +
+    "<div class=\"MU {{ MU.content.contentClass }} {{ MU.content.containerClass }} {{ MU.getClassName() }}\" id=\"MU\" ng-style=\"MU.systemStyle()\">\n" +
     "\n" +
     "\t<div class=\"MU__menu-top MU__menu-top--{{ !MU.menus.isVisible( 'top' ) && 'hidden' || MU.menus.state( 'top' ) }}\" ng-style=\"MU.topStyle()\">\n" +
     "\t\t<div class=\"MU__menu-top__inner\" ng-include=\" 'templates/menus/top.html' \"></div>\n" +

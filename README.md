@@ -3,4 +3,4 @@ Flexi-Menu
 
 A flexible menu
 
-http://www.brookjordan.uk/menu
+http://brookjordan.uk/projects-local/fleximenu/
